@@ -403,7 +403,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <h2 style="margin-top:8px" id="doneTitle">Остался один шаг: отправьте анкету менеджеру</h2>
       <p class="muted" style="margin-top:8px" id="doneLead">Выберите удобный способ. Ответ — в течение 24 часов.</p>
       <div class="send-grid" style="margin-top:20px">
-        <a class="send" id="sendTg" href="#" target="_blank" rel="noopener"><b>Отправить в Telegram</b><small>Откроется Telegram, выберите чат менеджера shamCRM</small></a>
+        <a class="send" id="sendTg" href="https://t.me/shamcrm_uz" target="_blank" rel="noopener"><b>Отправить в Telegram</b><small>Откроется чат @shamcrm_uz, а текст анкеты скопируется — просто вставьте его</small></a>
         <a class="send" id="sendMail" href="#"><b>Отправить на почту</b><small>info@shamcrm.com</small></a>
         <button class="send" type="button" id="copyAnketa"><b>Скопировать текст</b><small>Вставьте в любой мессенджер</small></button>
       </div>
@@ -430,6 +430,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
           <span>+998 55 588 81 00</span>
           <span>+998 77 375 68 68 <span class="muted">(директор)</span></span>
           <span>info@shamcrm.com</span>
+          <a href="https://t.me/shamcrm_uz" target="_blank" rel="noopener">Telegram: @shamcrm_uz</a>
           <a href="https://shamcrm.com" target="_blank" rel="noopener">shamcrm.com</a>
         </div>
       </div>
@@ -443,10 +444,14 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
     <div class="eyebrow">Шаг 2 из 5</div>
     <h2 style="margin-top:8px">Партнёрский договор</h2>
     <div class="doc-card" style="margin-top:22px">
-      <div class="doc-ico">DOCX</div>
+      <div class="doc-ico">PDF</div>
       <div>
-        <h3>Договор по распространению и внедрению shamCRM</h3>
-        <p class="muted" style="margin-top:6px">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Договор отправляет менеджер отдела партнёров после рассмотрения анкеты.</p>
+        <h3>Договор по распространению и внедрению онлайн-сервиса «ShamCRM»</h3>
+        <p class="muted" style="margin-top:6px">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Ознакомьтесь с договором заранее. Для подписания договор с вашими реквизитами отправит менеджер отдела партнёров после рассмотрения анкеты.</p>
+        <div class="row" style="margin-top:16px">
+          <a class="btn primary" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">Открыть договор (PDF)</a>
+          <a class="btn ghost" href="files/Dogovor-shamCRM.docx" download="Договор shamCRM.docx">Скачать в Word</a>
+        </div>
       </div>
     </div>
   </div>
@@ -563,7 +568,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="row">
         <button class="btn primary" type="button" id="dlPng">Скачать PNG</button>
         <button class="btn light" type="button" id="dlPdf">Скачать PDF</button>
-        <a class="btn light" id="certTg" href="#" target="_blank" rel="noopener">Отправить менеджеру в Telegram</a>
+        <a class="btn light" id="certTg" href="https://t.me/shamcrm_uz" target="_blank" rel="noopener">Отправить в Telegram @shamcrm_uz</a>
       </div>
     </div>
     <div class="card">
@@ -594,7 +599,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
 </section>
 
 </main>
-<footer><div class="wrap row between"><span>shamCRM · ООО «SOFTTECH GROUP» · Ташкент</span><span>info@shamcrm.com · shamcrm.com</span></div></footer>
+<footer><div class="wrap row between"><span>shamCRM · ООО «SOFTTECH GROUP» · Ташкент</span><span>info@shamcrm.com · <a href="https://t.me/shamcrm_uz" target="_blank" rel="noopener" style="color:inherit">Telegram @shamcrm_uz</a> · shamcrm.com</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="vendor/jspdf.umd.min.js"></script>
@@ -928,11 +933,22 @@ function shortText(){
 function showDone(){
   $('#formCard').classList.add('hidden');$('#formDone').classList.remove('hidden');
   var txt=shortText();
-  $('#sendTg').href='https://t.me/share/url?url='+encodeURIComponent('https://shamcrm.com')+'&text='+encodeURIComponent(txt);
+  tgText.anketa=txt;
   $('#sendMail').href='mailto:info@shamcrm.com?subject='+encodeURIComponent('Анкета партнёра shamCRM — '+(A.legal_name||''))+'&body='+encodeURIComponent(txt);
   $('#anketaSummary').innerHTML=anketaRows().map(function(g){if(!g.items.length)return '';return '<h4>'+esc(g.title)+'</h4>'+g.items.map(function(it){return '<div><span>'+esc(it[0].replace(/^[\d.]+ /,''))+'</span><span>'+esc(it[1])+'</span></div>'}).join('')}).join('');
   paintCrm();
 }
+/* Telegram: ссылка открывает чат @shamcrm_uz, а текст в это время копируется — его остаётся вставить */
+var TG_CHAT='https://t.me/shamcrm_uz';
+var tgText={anketa:'',cert:''};
+function copyText(txt,okMsg){
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast(okMsg)},function(){toast('Скопируйте текст вручную и отправьте в чат @shamcrm_uz')});return}
+  }catch(e){}
+  toast('Скопируйте текст вручную и отправьте в чат @shamcrm_uz');
+}
+$('#sendTg').addEventListener('click',function(){copyText(tgText.anketa||shortText(),'Текст анкеты скопирован — вставьте его в чат @shamcrm_uz')});
+$('#certTg').addEventListener('click',function(){if(tgText.cert)copyText(tgText.cert,'Текст скопирован — вставьте его в чат и прикрепите скачанный сертификат')});
 $('#copyAnketa').addEventListener('click',function(){
   var txt=anketaText();
   try{navigator.clipboard.writeText(txt).then(function(){toast('Анкета скопирована')},function(){toast('Не удалось скопировать. Выделите текст ниже вручную.')})}catch(e){toast('Не удалось скопировать. Выделите текст ниже вручную.')}
@@ -1189,7 +1205,7 @@ function renderCert(){
   makeCert(c.name,c.date).then(function(cv){
     certCanvas=cv;$('#certImg').src=cv.toDataURL('image/jpeg',0.92);
     var msg='Экзамен shamCRM сдан\nФИО: '+c.name+(c.company?'\nКомпания: '+c.company:'')+'\nРезультат: '+c.ok+' из '+c.n+'\nДата: '+fmtDate(c.date).replace(/ /g,'');
-    $('#certTg').href='https://t.me/share/url?url='+encodeURIComponent('https://shamcrm.com')+'&text='+encodeURIComponent(msg);
+    tgText.cert=msg;
   }).catch(function(){toast('Не удалось построить сертификат. Обновите страницу.')});
 }
 $('#dlPng').addEventListener('click',function(){if(certCanvas)saveCanvas(certCanvas,state.cert.name,'png')});
