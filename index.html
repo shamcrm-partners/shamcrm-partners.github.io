@@ -615,28 +615,42 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 var toastT;
 function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},2600)}
 
-/* ---------- отправка в CRM (адрес задаётся в config.js) ---------- */
+/* ---------- куда отправлять анкеты (адреса задаются в config.js) ---------- */
 var CFG=window.SHAMCRM_CONFIG||{};
-var CRM_URL=String(CFG.crmUrl||'').trim();
+var TARGETS=[];
+if(String(CFG.crmUrl||'').trim())TARGETS.push({id:'crm',url:String(CFG.crmUrl).trim(),json:true});
+if(String(CFG.sheetUrl||'').trim())TARGETS.push({id:'sheet',url:String(CFG.sheetUrl).trim(),json:false});
+var SEND_ON=TARGETS.length>0;
 if(!state.clientId){
   try{state.clientId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():''}catch(e){}
   if(!state.clientId)state.clientId='p-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
   save();
 }
-function crmSend(payload){
-  if(!CRM_URL)return Promise.reject(new Error('off'));
-  payload.client_id=state.clientId;
-  payload.page_url=location.href.split('#')[0];
-  if(CFG.formKey)payload.form_key=String(CFG.formKey);
+/* Один адрес. Google Таблица получает text/plain — так браузер не делает лишний запрос, который Google не принимает */
+function postTo(t,payload){
   var ctrl=null,timer=null;
-  try{ctrl=new AbortController();timer=setTimeout(function(){ctrl.abort()},15000)}catch(e){}
-  return fetch(CRM_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined})
+  try{ctrl=new AbortController();timer=setTimeout(function(){ctrl.abort()},20000)}catch(e){}
+  return fetch(t.url,{method:'POST',headers:{'Content-Type':t.json?'application/json':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow',signal:ctrl?ctrl.signal:undefined})
     .then(function(r){if(timer)clearTimeout(timer);if(!r.ok)throw new Error('http '+r.status);return r.text()})
     .then(function(txt){
       var d=null;try{d=JSON.parse(txt)}catch(e){}
       if(d&&d.ok===false)throw new Error('rejected');
       return {lead_id:(d&&(d.lead_id||d.id))||null};
     },function(err){if(timer)clearTimeout(timer);throw err});
+}
+/* Во все настроенные адреса сразу. Успех, если дошло хотя бы в один. ids — номера записей в каждом месте */
+function crmSend(payload,ids){
+  if(!SEND_ON)return Promise.reject(new Error('off'));
+  payload.client_id=state.clientId;
+  payload.page_url=location.href.split('#')[0];
+  if(CFG.formKey)payload.form_key=String(CFG.formKey);
+  return Promise.all(TARGETS.map(function(t){
+    var p=Object.assign({},payload,{lead_id:(ids&&ids[t.id])||null});
+    return postTo(t,p).then(function(r){return {id:t.id,ok:true,lead_id:r.lead_id}},function(){return {id:t.id,ok:false}});
+  })).then(function(rs){
+    if(!rs.some(function(r){return r.ok}))throw new Error('failed');
+    var got={};rs.forEach(function(r){if(r.ok&&r.lead_id)got[r.id]=String(r.lead_id)});return got;
+  });
 }
 
 /* ---------- скачивание файлов ---------- */
@@ -844,7 +858,6 @@ function anketaPayload(){
   anketaRows().forEach(function(g){g.items.forEach(function(it){answers.push({section:g.title,question:it[0].replace(/^[\d.]+ /,''),answer:it[1]})})});
   return {
     type:'anketa',
-    lead_id:A._leadId||null,
     submitted_at:A.submittedAt,
     company:A.brand||A.legal_name||'',
     legal_name:A.legal_name||'',
@@ -864,12 +877,12 @@ function anketaPayload(){
   };
 }
 function sendAnketaToCrm(){
-  if(!CRM_URL||crmBusy)return;
+  if(!SEND_ON||crmBusy)return;
   var a=A;
   crmBusy=true;a._crm='sending';state.anketa=a;save();paintCrm();
-  crmSend(anketaPayload()).then(function(res){
+  crmSend(anketaPayload(),a._ids).then(function(got){
     if(a!==A)return;
-    crmBusy=false;a._crm='ok';if(res&&res.lead_id)a._leadId=res.lead_id;state.anketa=a;save();paintCrm();
+    crmBusy=false;a._crm='ok';a._ids=Object.assign({},a._ids||{},got);state.anketa=a;save();paintCrm();
   },function(){
     if(a!==A)return;
     crmBusy=false;a._crm='fail';state.anketa=a;save();paintCrm();
@@ -877,7 +890,7 @@ function sendAnketaToCrm(){
 }
 function paintCrm(){
   var pill=$('#crmState'),title=$('#doneTitle'),lead=$('#doneLead');
-  if(!CRM_URL){pill.hidden=true;return}
+  if(!SEND_ON){pill.hidden=true;return}
   var s=A._crm;if(s==='sending'&&!crmBusy)s='fail';
   pill.hidden=false;
   if(s==='ok'){
@@ -1075,12 +1088,11 @@ function finishExam(){
 }
 /* Результат экзамена → тот же лид в CRM */
 function sendExamToCrm(ex,s){
-  if(!CRM_URL)return;
+  if(!SEND_ON)return;
   var a=A||{};
   ex.crm='sending';save();paintExamCrm();
   crmSend({
     type:'exam',
-    lead_id:a._leadId||null,
     finished_at:ex.finishedAt,
     name:ex.name,
     company:ex.company||'',
@@ -1092,11 +1104,11 @@ function sendExamToCrm(ex,s){
     percent:Math.round(s.ok/s.n*100),
     passed:s.passed,
     modules:s.per.map(function(p){return {module:p.id,title:p.title,correct:p.ok,total:p.n}})
-  }).then(function(){if(state.exam===ex){ex.crm='ok';save();paintExamCrm()}},function(){if(state.exam===ex){ex.crm='fail';save();paintExamCrm()}});
+  },a._ids).then(function(){if(state.exam===ex){ex.crm='ok';save();paintExamCrm()}},function(){if(state.exam===ex){ex.crm='fail';save();paintExamCrm()}});
 }
 function paintExamCrm(){
   var el=$('#resCrm'),ex=state.exam;
-  if(!CRM_URL||!ex||!ex.crm){el.hidden=true;return}
+  if(!SEND_ON||!ex||!ex.crm){el.hidden=true;return}
   el.hidden=false;
   el.textContent=ex.crm==='ok'?'Результат передан менеджеру shamCRM.':ex.crm==='fail'?'Результат не удалось передать автоматически — сообщите его менеджеру shamCRM.':'Передаём результат менеджеру shamCRM…';
 }
