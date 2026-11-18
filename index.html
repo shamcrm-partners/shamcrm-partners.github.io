@@ -154,6 +154,8 @@ main{padding:28px 0 64px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px}
 .contacts{display:grid;gap:6px;font-weight:600}
+.contacts a{text-decoration:none}
+.contacts a:hover{text-decoration:underline}
 
 /* ---------- анкета ---------- */
 .form-shell{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
@@ -402,7 +404,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="row between"><div class="eyebrow">Анкета заполнена</div><span class="pill" id="crmState" hidden></span></div>
       <h2 style="margin-top:8px" id="doneTitle">Остался один шаг: отправьте анкету менеджеру</h2>
       <p class="muted" style="margin-top:8px" id="doneLead">Выберите удобный способ. Ответ — в течение 24 часов.</p>
-      <div class="send-grid" style="margin-top:20px">
+      <div class="send-grid" style="margin-top:20px" id="sendGrid">
         <a class="send" id="sendTg" href="https://t.me/shamcrm_uz" target="_blank" rel="noopener"><b>Отправить в Telegram</b><small>Откроется чат @shamcrm_uz, а текст анкеты скопируется — просто вставьте его</small></a>
         <a class="send" id="sendMail" href="#"><b>Отправить на почту</b><small>info@shamcrm.com</small></a>
         <button class="send" type="button" id="copyAnketa"><b>Скопировать текст</b><small>Вставьте в любой мессенджер</small></button>
@@ -427,9 +429,8 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="card">
         <h3>Контакты</h3>
         <div class="contacts" style="margin-top:12px">
-          <span>+998 55 588 81 00</span>
-          <span>+998 77 375 68 68 <span class="muted">(директор)</span></span>
-          <span>info@shamcrm.com</span>
+          <a href="tel:+998555888100">+998 555 888 100</a>
+          <a href="mailto:info@shamcrm.com">info@shamcrm.com</a>
           <a href="https://t.me/shamcrm_uz" target="_blank" rel="noopener">Telegram: @shamcrm_uz</a>
           <a href="https://shamcrm.com" target="_blank" rel="noopener">shamcrm.com</a>
         </div>
@@ -889,22 +890,25 @@ function sendAnketaToCrm(){
   });
 }
 function paintCrm(){
-  var pill=$('#crmState'),title=$('#doneTitle'),lead=$('#doneLead');
-  if(!SEND_ON){pill.hidden=true;return}
+  var pill=$('#crmState'),title=$('#doneTitle'),lead=$('#doneLead'),grid=$('#sendGrid');
+  if(!SEND_ON){pill.hidden=true;grid.hidden=false;return}
   var s=A._crm;if(s==='sending'&&!crmBusy)s='fail';
   pill.hidden=false;
   if(s==='ok'){
     pill.className='pill ok';pill.textContent='Получено shamCRM';
-    title.textContent='Анкета отправлена менеджеру';
-    lead.textContent='Менеджер shamCRM ответит в течение 24 часов. Если хотите, продублируйте анкету в Telegram или на почту.';
+    title.textContent='Анкета отправлена';
+    lead.textContent='Спасибо! Менеджер shamCRM свяжется с вами в течение 24 часов.';
+    grid.hidden=true;
   }else if(s==='fail'){
     pill.className='pill bad';pill.textContent='Не отправилось';
     title.textContent='Отправьте анкету менеджеру';
     lead.innerHTML='Автоматически отправить не получилось. Выберите способ ниже или <button type="button" class="btn ghost" id="retryCrm" style="min-height:0;padding:6px 12px;margin-left:4px">попробуйте ещё раз</button>';
+    grid.hidden=false;
   }else{
     pill.className='pill';pill.textContent='Отправляем…';
-    title.textContent='Отправляем анкету менеджеру…';
+    title.textContent='Отправляем анкету…';
     lead.textContent='Это займёт несколько секунд.';
+    grid.hidden=true;
   }
 }
 $('#formDone').addEventListener('click',function(e){if(e.target.closest('#retryCrm'))sendAnketaToCrm()});
