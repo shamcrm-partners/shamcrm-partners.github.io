@@ -226,21 +226,21 @@ main{padding:28px 0 64px}
 .video-card{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:center}
 .video-card video{width:100%;aspect-ratio:9/16;border-radius:16px;background:var(--navy);object-fit:cover}
 @media (max-width:760px){.video-card{grid-template-columns:1fr}.video-card video{max-width:320px}}
-.module{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
-.module>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:20px 22px}
-.module>summary::-webkit-details-marker{display:none}
+.module{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:22px;display:grid;gap:16px}
+.mod-head{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
 .mod-num{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:18px;background:var(--blue-soft);color:var(--blue)}
 .module.read .mod-num{background:linear-gradient(135deg,var(--mint),var(--lime));color:var(--navy)}
 .mod-title{display:grid;gap:3px}
-.mod-title b{font-size:17px}
+.mod-title b{font-size:18px}
 .mod-title small{color:var(--muted);font-size:14px}
-.chev{width:22px;height:22px;transition:transform .2s;color:var(--muted)}
-.module[open] .chev{transform:rotate(180deg)}
-.mod-body{padding:0 22px 22px;display:grid;gap:20px;border-top:1px solid var(--line);padding-top:20px}
-.rule-group h4{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
-.rule-group ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.rule-group li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:10px 12px;border-radius:10px;background:#F7F8FD}
-.rule-group li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue-2);margin:8px 0 0 7px}
+.topics{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}
+.topics li{display:grid;grid-template-columns:14px 1fr;gap:8px;font-size:15px;line-height:1.45}
+.topics li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue-2);margin-top:8px}
+@media (max-width:700px){.topics{grid-template-columns:1fr}}
+.lesson-soon{display:flex;gap:12px;align-items:center;border-radius:12px;background:#F7F8FD;border:1.5px dashed #CDD3EC;padding:12px 16px;color:var(--muted);font-size:14px}
+.lesson-soon i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:12px;flex:none}
+.lesson-video{border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#000}
+.lesson-video iframe,.lesson-video video{width:100%;height:100%;border:0;display:block}
 
 /* ---------- экзамен ---------- */
 .mode{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:4px;cursor:pointer;background:#fff;text-align:left}
@@ -310,7 +310,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
           <li data-r="anketa"><div><b>Анкета</b><small>ответ в течение 24 часов</small></div></li>
           <li data-r="dogovor"><div><b>Партнёрский договор</b><small>подписание с shamCRM</small></div></li>
           <li data-r="obuchenie"><div><b>Обучение</b><small>4 модуля по продукту</small></div></li>
-          <li data-r="ekzamen"><div><b>Экзамен</b><small>проходной балл 80% по каждому модулю</small></div></li>
+          <li data-r="ekzamen"><div><b>Экзамен</b><small>40 вопросов, проходной балл 80%</small></div></li>
           <li data-r="sertifikat"><div><b>Сертификат</b><small>сразу после экзамена</small></div></li>
         </ol>
       </div>
@@ -479,7 +479,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="section-head"><div class="eyebrow">Шаг 3 из 5</div><h2>Обучение: 4 модуля по продукту</h2></div>
       <span class="pill" id="readCount">Изучено 0 из 4</span>
     </div>
-    <p class="muted" style="margin-top:10px;max-width:70ch">В каждом модуле — правила работы с shamCRM, по которым составлен экзамен. Откройте модуль, прочитайте и отметьте «Изучено».</p>
+    <p class="muted" style="margin-top:10px;max-width:70ch">Темы, которые нужно изучить перед экзаменом. Видеоуроки по каждому модулю добавим позже. Изучив модуль, отметьте «Модуль изучен».</p>
     <div class="bar" style="margin-top:16px"><span id="readBar" style="width:0%"></span></div>
   </div>
 
@@ -502,7 +502,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
 
   <div class="card">
     <div class="row between">
-      <div><h3>Готовы к экзамену?</h3><p class="muted" style="margin-top:4px">40 вопросов, по 10 из каждого модуля. Проходной балл — 80% по каждому модулю.</p></div>
+      <div><h3>Готовы к экзамену?</h3><p class="muted" style="margin-top:4px">40 вопросов по всем четырём модулям. Проходной балл — 80%, то есть 32 правильных ответа.</p></div>
       <a class="btn primary" href="#ekzamen">Перейти к экзамену</a>
     </div>
   </div>
@@ -513,11 +513,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
   <div class="card" id="examIntro">
     <div class="eyebrow">Шаг 4 из 5</div>
     <h2 style="margin-top:8px">Экзамен по shamCRM</h2>
-    <p class="muted" style="margin-top:8px">В каждом вопросе выберите один вариант. Проходной результат — не менее 80% правильных ответов по каждому модулю. Сертификат выдаётся сразу после успешной сдачи.</p>
-    <div class="grid g2" style="margin-top:20px" id="modeGrid">
-      <button type="button" class="mode on" data-mode="partner"><b>Экзамен партнёра</b><small>40 вопросов · по 10 из каждого модуля</small></button>
-      <button type="button" class="mode" data-mode="full"><b>Полный контрольный тест</b><small>240 вопросов · 4 модуля по 60 · для сотрудников</small></button>
-    </div>
+    <p class="muted" style="margin-top:8px">40 вопросов по всем четырём модулям обучения. В каждом вопросе выберите один вариант. Чтобы сдать экзамен, нужно не меньше 80% правильных ответов — 32 из 40. Сертификат выдаётся сразу после успешной сдачи.</p>
     <div class="fields">
       <div class="field" id="f-exName"><label for="exName">ФИО для сертификата <span class="req">*</span></label><input type="text" id="exName" autocomplete="name" placeholder="Например: Каримов Азиз Рустамович"><span class="hint">Так имя будет написано в сертификате. Можно латиницей или кириллицей.</span><span class="errmsg">Укажите ФИО</span></div>
       <div class="field"><label for="exCompany">Компания</label><input type="text" id="exCompany" autocomplete="organization"></div>
@@ -546,7 +542,6 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="score-big tabnum" id="resScore"></div>
       <p class="muted" id="resText" style="max-width:52ch"></p>
     </div>
-    <div class="grid g2" style="margin-top:22px" id="resModules"></div>
     <p class="muted" id="resCrm" style="margin-top:14px;font-size:14px" hidden></p>
     <div class="row" style="margin-top:24px" id="resActions"></div>
     <details style="margin-top:22px" id="reviewWrap"><summary style="cursor:pointer;font-weight:700">Разбор ошибок</summary><div class="review" id="review" style="margin-top:14px"></div></details>
@@ -961,41 +956,59 @@ $('#contractSigned').checked=!!state.contract;
 $('#contractSigned').addEventListener('change',function(e){state.contract=e.target.checked;save();paintSteps()});
 
 /* =========================================================
-   3. ОБУЧЕНИЕ — правила из контрольного теста (правильные ответы), сгруппированы по темам
+   3. ОБУЧЕНИЕ — темы модулей. Темы составлены по вопросам экзамена (exam.json).
+   Чтобы добавить видеоурок, вставьте ссылку в video: ссылку YouTube или файл, например 'video/modul-1.mp4'.
    ========================================================= */
 var MODS=[
- {id:1,title:'Знакомство с shamCRM и общая логика продукта',topics:'Назначение продукта, модули, бизнес-задачи, путь клиента и связи между разделами',groups:[
-  ['Что такое shamCRM',['Используйте shamCRM как единую среду для работы с клиентами, продажами и связанными бизнес-процессами.','shamCRM подходит компаниям, где есть обращения, работа с клиентами, продажи и потребность контролировать сотрудников.','CRM является основой работы менеджера с клиентами, лидами, сделками и этапами.','Для разных бизнесов набор используемых возможностей shamCRM будет различаться.']],
-  ['Путь клиента',['Видьте путь работы как последовательность: обращение, работа менеджера, этап сделки, следующее действие и результат.','Связывайте информацию о клиенте с обращением, сделкой, следующей задачей и результатом работы.','Используйте воронку, чтобы видеть этап работы с клиентом и следующее действие.','Ориентируйтесь на фактический этап сделки и предусмотренное следующее действие.','Фиксируйте последующее действие задачей, если после разговора нужно перезвонить, отправить информацию или подготовить предложение.','Фиксируйте информацию о клиенте в CRM, а не оставляйте её только в личных заметках.']],
-  ['Каналы и модули',['Связывайте доступные коммуникации с общей историей работы с клиентом.','Используйте модуль телефонных коммуникаций и Call Center, когда бизнесу важны звонки и их история.','Проверяйте наличие товара и связанные учётные данные, если продажа зависит от запаса и задолженности.','Связывайте интернет-заказ с дальнейшей работой внутри shamCRM.','Рассматривайте Mini App как дополнительный канал взаимодействия с клиентом и оформления заказа.','Используйте AI как набор инструментов для автоматизации и анализа конкретных процессов, учитывая изучаемую конфигурацию.','Используйте аналитику, чтобы оценивать результаты и видеть картину работы, а не заменять ею фиксацию действий.']],
-  ['Как показывать продукт клиенту',['Сначала выясните задачу бизнеса и только затем подбирайте нужные возможности продукта.','Объясняйте функцию через решаемую проблему клиента и ожидаемый результат.','Перед подключением другого специалиста поймите текущую ситуацию клиента и нужный следующий этап процесса.']]
+ {id:1,title:'Знакомство с shamCRM',video:'',topics:[
+  'Что такое shamCRM и какие задачи бизнеса он решает',
+  'Из чего состоит продукт: CRM, звонки, учёт, интернет-магазин, Telegram Mini App, AI, аналитика',
+  'Каким компаниям подходит shamCRM и как подобрать модули под бизнес',
+  'Путь клиента: обращение → лид → сделка → следующее действие → результат',
+  'Почему вся информация о клиенте хранится в системе, а не в личных заметках',
+  'Как показывать продукт: от задачи клиента, а не от списка функций'
  ]},
- {id:2,title:'Настройки, интеграции и CRM',topics:'Настройки и права доступа, интеграции, клиенты, лиды, сделки, воронки и основные разделы CRM',groups:[
-  ['Настройки и права доступа',['Раздел настроек — для организации пользователей, компании, прав, интеграций и других параметров системы.','Системные настройки выполняет администратор или сотрудник с соответствующими правами.','Сначала проверьте роль и необходимые разрешения, предоставляя только доступ, нужный для работы.','Применяйте настройки прав доступа только к нужным действиям и ролям.']],
-  ['Интеграции и каналы',['Проверьте доступность конкретного канала и фактические настройки перед тем, как обещать его работу клиенту.','Проверьте настройки интеграции и корректность связи, а не делайте вывод по одному лишь наличию раздела.','Учитывайте, что каналы интеграций привязаны к воронкам и перенос может изменить доступность чата из прежней воронки.','Проверьте связь между каналом, воронкой и доступным чатом перед тем, как продолжать общение из новой воронки.']],
-  ['Клиент, лид, сделка',['Различайте клиента как запись о лице или компании, лид как потенциальное обращение и сделку как коммерческую работу.','Сопоставляйте лид с клиентом и дальнейшей сделкой так, чтобы сохранялась логика перехода от обращения к продаже.','Источник обозначает происхождение обращения, а этап сделки — состояние текущей работы.','Этап сделки — для текущего состояния, задача — для конкретного следующего действия.','Используйте воронку со стадиями для отображения последовательности работы по сделкам.','Показывайте реальное положение дел по сделке и не меняйте этап ради визуальной активности.','Если для квалификации не хватает сведений: сохраните известную информацию, определите, чего не хватает, и запланируйте следующий контакт.','Поддерживайте актуальность и полноту карточки клиента, чтобы дальнейшая работа опиралась на общий контекст.','Добавьте пользовательское поле, если нужно сохранять дополнительный параметр, которого нет в стандартном наборе.']],
-  ['Разделы CRM и подход к клиенту',['Проверьте календарь и планирование, когда нужно организовать события и ориентироваться в датах.','Рассылки, события, планирование, заказы, календарь и реклама — разные разделы, которые поддерживают разные процессы.','Уточните потребность и используйте CRM для поддержки последовательной работы, а не обещайте функции без проверки.']]
+ {id:2,title:'Настройки, интеграции и CRM',video:'',topics:[
+  'Настройки системы: пользователи, компания, роли и права доступа',
+  'Подключение каналов (мессенджеры, соцсети) и проверка, что они работают',
+  'Каналы и воронки: что меняется при переносе лида в другую воронку',
+  'Клиент, лид и сделка — в чём разница',
+  'Воронки и этапы сделок, источник обращения',
+  'Карточка клиента, дополнительные поля и как не создавать дубли',
+  'Разделы CRM: календарь, заказы, рассылки, реклама'
  ]},
- {id:3,title:'Управление командой и Call Center',topics:'Задачи, проекты, ответственные, сроки, статусы, контроль выполнения, входящие и исходящие звонки, история звонков',groups:[
-  ['Задачи',['Создавайте задачу с конкретным действием, ответственным и сроком.','Заполняйте задачу понятным действием, чтобы исполнитель понимал ожидаемый результат.','Назначайте ответственного, чтобы было ясно, кто отвечает за выполнение задачи.','Устанавливайте реалистичный срок, отражающий договорённость и позволяющий проверить своевременность исполнения.','Обновляйте статус задачи в соответствии с её фактическим состоянием.','Используйте задачи для контроля конкретных действий сотрудников и хода выполнения.','Когда задача задерживается, проверьте ответственного, срок и актуальный статус.','Передавайте руководителю фактическую картину исполнения по задачам, используя актуальные статусы и сроки.']],
-  ['Проекты',['Используйте проект для объединения связанной работы, состоящей из нескольких задач.','Размещайте связанные задачи в проекте, если они относятся к одному общему результату.','Проект координирует связанные задачи, а статус каждой задачи контролирует отдельное действие.']],
-  ['Call Center и звонки',['Используйте Call Center для работы с телефонными коммуникациями и связанными сведениями о звонках.','Различайте входящие звонки, инициированные клиентом, и исходящие звонки, инициированные сотрудником.','История звонков — для просмотра предыдущих телефонных взаимодействий и их контекста.','Сведения о конкретном звонке — для понимания деталей телефонного взаимодействия.','Сопоставляйте звонок с клиентом, чтобы дальнейшая работа использовала правильный контекст.','Сначала ознакомьтесь с историей звонков, затем уточните у клиента то, чего история не проясняет.','После звонка зафиксируйте результат и отдельной задачей определите следующий контакт.','Задачи — для будущих действий, история звонков — для уже состоявшихся телефонных контактов.','Не делайте вывод о результате продажи только по факту состоявшегося звонка.']]
+ {id:3,title:'Управление командой и Call Center',video:'',topics:[
+  'Задачи: действие, ответственный, срок и статус',
+  'Проекты: как объединить связанные задачи',
+  'Контроль выполнения и просроченные задачи',
+  'Call Center: входящие и исходящие звонки',
+  'История звонков и детали разговора',
+  'Связь звонка с клиентом, сделкой и следующей задачей'
  ]},
- {id:4,title:'Модуль учёта, онлайн-магазин и Mini App',topics:'Склады и остатки, долги, зарплаты, приход, продажа, возврат, производство, сырьё, публикация товаров, сайт, Mini App и заказы',groups:[
-  ['Склад и учётные операции',['Используйте склад для организации учёта товаров и проверки остатков.','Проверьте учёт и складские остатки, прежде чем обещать покупателю наличие товара.','Фиксируйте поступление новой партии как приход товара.','Отражайте продажу как операцию, которая должна согласовываться с движением товара и данными учёта.','Оформляйте возврат как отдельную операцию, связанную с возвращением товара после продажи.','Учитывайте возврат в общем движении товара, чтобы сведения об остатках оставались актуальными.','Учитывайте долги отдельно от самого факта движения товара, чтобы видеть финансовые обязательства.','Используйте начисления зарплат для отражения соответствующих расчётных операций, не смешивая их с движением товара.','Используйте модуль учёта для связи товарных операций и финансовых данных, которые нужны бизнесу.']],
-  ['Производство',['При производстве учитывайте расход сырья и товаров и контролируйте итог производства.','Сопоставляйте расход сырья и товаров с результатом производства, чтобы контролировать процесс.','Обрабатывайте производство как отдельный связанный процесс учёта, а не только как продажу готового товара.']],
-  ['Интернет-магазин, сайт и Telegram Mini App',['Опубликуйте товар в интернет-магазине, если он должен быть доступен клиенту в онлайн-каталоге.','Различайте учёт товара внутри системы и публикацию товара для покупателей в онлайн-каталоге.','Сайт — канал приёма заказов, информация о которых может использоваться внутри shamCRM.','Telegram Mini App — канал, через который клиент может взаимодействовать с каталогом и оформлять заказ.','Контролируйте онлайн-заказ после его поступления и используйте данные заказа в дальнейшей работе внутри shamCRM.','Связывайте онлайн-заказы с дальнейшей работой менеджера, а не оставляйте их изолированно от клиентского процесса.','Проверьте статус заказа и доступные сведения о нём перед тем, как обещать покупателю результат обработки.','Проверяйте складские данные и сведения о заказе в соответствующих разделах, не подменяя одно другим.']]
+ {id:4,title:'Учёт, интернет-магазин и Mini App',video:'',topics:[
+  'Склад и остатки товаров',
+  'Приход, продажа и возврат товара',
+  'Долги клиентов и начисление зарплат',
+  'Производство: сырьё и готовая продукция',
+  'Публикация товаров в интернет-магазине',
+  'Заказы с сайта и их обработка в shamCRM',
+  'Telegram Mini App: каталог и заказы в Telegram'
  ]}
 ];
-var chev='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+function lessonHTML(url){
+  if(!url)return '<div class="lesson-soon"><i>▶</i><span>Видеоурок по этому модулю появится позже</span></div>';
+  var m=String(url).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([\w-]{11})/);
+  if(m)return '<div class="lesson-video"><iframe src="https://www.youtube-nocookie.com/embed/'+m[1]+'" title="Видеоурок" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>';
+  return '<div class="lesson-video"><video src="'+esc(url)+'" controls playsinline preload="metadata"></video></div>';
+}
 var modulesBuilt=false;
 function renderModules(){
   if(!modulesBuilt){
     $('#modules').innerHTML=MODS.map(function(m){
-      var n=m.groups.reduce(function(a,g){return a+g[1].length},0);
-      return '<details class="module" id="mod-'+m.id+'"><summary><span class="mod-num">'+m.id+'</span><span class="mod-title"><b>Модуль '+m.id+'. '+esc(m.title)+'</b><small>'+esc(m.topics)+' · '+n+' правил</small></span>'+chev+'</summary><div class="mod-body">'+
-        m.groups.map(function(g){return '<div class="rule-group"><h4>'+esc(g[0])+'</h4><ul>'+g[1].map(function(r){return '<li><span>'+esc(r)+'</span></li>'}).join('')+'</ul></div>'}).join('')+
-        '<div class="row"><button type="button" class="btn primary" data-read="'+m.id+'">Модуль изучен</button></div></div></details>';
+      return '<div class="module" id="mod-'+m.id+'"><div class="mod-head"><span class="mod-num">'+m.id+'</span><div class="mod-title"><b>Модуль '+m.id+'. '+esc(m.title)+'</b><small>'+m.topics.length+' тем'+(m.video?' · видеоурок':'')+'</small></div></div>'+
+        '<ul class="topics">'+m.topics.map(function(t){return '<li><span>'+esc(t)+'</span></li>'}).join('')+'</ul>'+
+        lessonHTML(m.video)+
+        '<div class="row"><button type="button" class="btn primary" data-read="'+m.id+'">Модуль изучен</button></div></div>';
     }).join('');
     modulesBuilt=true;
   }
@@ -1004,13 +1017,13 @@ function renderModules(){
     var b=$('[data-read="'+m.id+'"]',el);b.textContent=state.read[m.id]?'✓ Изучено':'Модуль изучен';b.className='btn '+(state.read[m.id]?'ghost':'primary');
   });
   var c=MODS.filter(function(m){return state.read[m.id]}).length;
-  $('#readCount').textContent='Изучено '+c+' из 4';$('#readCount').className='pill'+(c===4?' ok':'');
-  $('#readBar').style.width=(c*25)+'%';
+  $('#readCount').textContent='Изучено '+c+' из '+MODS.length;$('#readCount').className='pill'+(c===MODS.length?' ok':'');
+  $('#readBar').style.width=Math.round(c/MODS.length*100)+'%';
 }
 $('#modules').addEventListener('click',function(e){
   var b=e.target.closest('[data-read]');if(!b)return;
   var id=b.dataset.read;state.read[id]=!state.read[id];save();renderModules();paintSteps();
-  if(state.read[id]){var el=$('#mod-'+id);el.open=false;var nx=$('#mod-'+(+id+1));if(nx){nx.open=true;nx.scrollIntoView({block:'start',behavior:'smooth'})}else toast('Все модули изучены — можно сдавать экзамен')}
+  if(state.read[id]){var nx=$('#mod-'+(+id+1));if(nx&&!state.read[+id+1])nx.scrollIntoView({block:'start',behavior:'smooth'});else if(MODS.every(function(m){return state.read[m.id]}))toast('Все модули изучены — можно сдавать экзамен')}
 });
 var vid=$('#promoVideo');
 vid.addEventListener('error',function(){$('#videoCard').classList.add('hidden')});
@@ -1028,9 +1041,8 @@ function loadBank(){
   return bankP;
 }
 loadBank();
-var mode='partner';
-var PASS=0.8;
-$('#modeGrid').addEventListener('click',function(e){var b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;$$('#modeGrid .mode').forEach(function(x){x.classList.toggle('on',x===b)})});
+var EXAM_SIZE=40;   // сколько вопросов в экзамене
+var PASS=0.8;       // проходной балл: 80% правильных ответов
 function renderExamIntro(){
   var ex=state.exam;
   if(ex&&ex.finished){showResult();return}
@@ -1047,13 +1059,10 @@ $('#startExam').addEventListener('click',function(){
   $('#examLoad').textContent='Загружаю вопросы…';
   loadBank().then(function(d){
     $('#examLoad').textContent='';
-    var items=[];
-    d.modules.forEach(function(m,mi){
-      var idx=m.qs.map(function(_,i){return i});
-      if(mode==='partner')idx=shuffle(idx).slice(0,10).sort(function(a,b){return a-b});
-      idx.forEach(function(i){items.push([mi,i])});
-    });
-    state.exam={mode:mode,name:name,company:$('#exCompany').value.trim(),items:items,ans:[],pos:0,startedAt:new Date().toISOString(),finished:false};
+    var all=[];
+    d.modules.forEach(function(m,mi){m.qs.forEach(function(_,i){all.push([mi,i])})});
+    var items=shuffle(all).slice(0,EXAM_SIZE);
+    state.exam={mode:'partner',name:name,company:$('#exCompany').value.trim(),items:items,ans:[],pos:0,startedAt:new Date().toISOString(),finished:false};
     save();runExam();
   }).catch(function(){$('#examLoad').textContent='Не удалось загрузить вопросы. Обновите страницу и попробуйте ещё раз.'});
 });
@@ -1091,7 +1100,7 @@ function score(){
   var ex=state.exam,d=BANK;var per=d.modules.map(function(m){return {id:m.id,title:m.title,ok:0,n:0}});var wrong=[];
   ex.items.forEach(function(it,i){var q=d.modules[it[0]].qs[it[1]];var p=per[it[0]];p.n++;if(ex.ans[i]===q.a)p.ok++;else wrong.push({m:d.modules[it[0]].id,q:q,yours:ex.ans[i]})});
   var ok=per.reduce(function(a,p){return a+p.ok},0);
-  var passed=per.every(function(p){return p.n===0||p.ok/p.n>=PASS-1e-9});
+  var n=ex.items.length;var passed=n>0&&(per.reduce(function(a,p){return a+p.ok},0))/n>=PASS-1e-9;
   return {per:per,ok:ok,n:ex.items.length,passed:passed,wrong:wrong};
 }
 function finishExam(){
@@ -1114,7 +1123,7 @@ function sendExamToCrm(ex,s){
     company:ex.company||'',
     phone:a.phone||'',
     email:a.email||'',
-    mode:ex.mode==='full'?'full_240':'partner_40',
+    mode:'partner_40',
     correct:s.ok,
     total:s.n,
     percent:Math.round(s.ok/s.n*100),
@@ -1133,11 +1142,11 @@ function showResult(){
     var ex=state.exam;var s=score();
     $('#examIntro').classList.add('hidden');$('#examRun').classList.add('hidden');$('#examResult').classList.remove('hidden');
     var pct=Math.round(s.ok/s.n*100);
-    $('#resEyebrow').textContent=(ex.mode==='full'?'Полный контрольный тест':'Экзамен партнёра')+' · '+ex.name;
+    $('#resEyebrow').textContent='Экзамен партнёра · '+ex.name;
     $('#resPill').textContent=s.passed?'Экзамен сдан':'Не сдан';$('#resPill').className='pill '+(s.passed?'ok':'bad');
     $('#resScore').textContent=s.ok+' / '+s.n;
-    $('#resText').textContent=s.passed?('Правильных ответов '+pct+'%. Проходной балл набран по всем модулям — сертификат готов.'):('Правильных ответов '+pct+'%. Нужно не меньше 80% по каждому модулю. Повторите модули, где результат ниже, и пересдайте: вопросы будут другими.');
-    $('#resModules').innerHTML=s.per.map(function(p){var r=p.n?p.ok/p.n:0;var good=r>=PASS-1e-9;return '<div class="mod-res"><div class="row"><b>Модуль '+p.id+'</b><span class="tabnum '+(good?'':'muted')+'">'+p.ok+' / '+p.n+(good?' ✓':'')+'</span></div><div class="bar '+(good?'mint':'red')+'"><span style="width:'+Math.round(r*100)+'%"></span></div><small class="muted">'+esc(p.title)+'</small></div>'}).join('');
+    var need=Math.ceil(s.n*PASS-1e-9);
+    $('#resText').textContent=s.passed?('Правильных ответов '+s.ok+' из '+s.n+' ('+pct+'%). Проходной балл набран — сертификат готов.'):('Правильных ответов '+s.ok+' из '+s.n+' ('+pct+'%). Нужно не меньше '+need+'. Повторите темы модулей и пересдайте: вопросы будут другими.');
     $('#resActions').innerHTML=(s.passed?'<a class="btn primary" href="#sertifikat">Получить сертификат</a>':'<a class="btn primary" href="#obuchenie">Повторить обучение</a>')+'<button type="button" class="btn line" id="retake">'+(s.passed?'Пройти ещё раз':'Пересдать экзамен')+'</button>';
     var L='АБВГ';
     $('#reviewWrap').classList.toggle('hidden',!s.wrong.length);
