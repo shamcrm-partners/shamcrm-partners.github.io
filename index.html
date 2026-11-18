@@ -313,7 +313,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
         <ol id="routeList">
           <li data-r="anketa"><div><b>Анкета</b><small>ответ в течение 24 часов</small></div></li>
           <li data-r="dogovor"><div><b>Партнёрский договор</b><small>подписание с shamCRM</small></div></li>
-          <li data-r="obuchenie"><div><b>Обучение</b><small>4 модуля по продукту</small></div></li>
+          <li data-r="obuchenie"><div><b>Обучение</b><small>4 модуля, доступ по коду от менеджера</small></div></li>
           <li data-r="ekzamen"><div><b>Экзамен</b><small>40 вопросов, проходной балл 80%</small></div></li>
           <li data-r="sertifikat"><div><b>Сертификат</b><small>сразу после экзамена</small></div></li>
         </ol>
@@ -422,7 +422,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
       <div class="card">
         <h3>Что будет после анкеты</h3>
         <ul class="list" style="margin-top:14px;font-size:15px">
-          <li><span class="check">1</span><span>Менеджер shamCRM ответит в течение 24 часов</span></li>
+          <li><span class="check">1</span><span>Менеджер shamCRM свяжется в течение 24 часов и выдаст код доступа к обучению</span></li>
           <li><span class="check">2</span><span>Подписание партнёрского договора</span></li>
           <li><span class="check">3</span><span>Обучение и экзамен</span></li>
           <li><span class="check">4</span><span>Сертификат, NFR-версия shamCRM и начало работы</span></li>
@@ -580,6 +580,22 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
 </section>
 
 <!-- ================= КАБИНЕТ ОТДЕЛА ================= -->
+<section class="view hidden" id="v-lock">
+  <div class="card">
+    <div class="eyebrow">Для партнёров shamCRM</div>
+    <h2 style="margin-top:8px">Обучение, экзамен и сертификат — по коду доступа</h2>
+    <p class="muted" style="margin-top:8px;max-width:62ch">Код выдаёт менеджер shamCRM. Введите его один раз — на этом устройстве обучение, экзамен и сертификат откроются.</p>
+    <form id="lockForm" class="row" style="margin-top:20px;align-items:flex-start" novalidate>
+      <div class="field" id="f-code" style="flex:1;min-width:220px;max-width:340px;margin:0">
+        <input type="text" id="accessCode" placeholder="SHAM-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Код доступа">
+        <span class="errmsg" id="codeErr">Неверный код</span>
+      </div>
+      <button class="btn primary" type="submit" id="unlockBtn">Открыть</button>
+    </form>
+    <div class="note" style="margin-top:20px">Нет кода? <a href="#anketa">Заполните анкету</a> — менеджер свяжется в течение 24 часов и выдаст код. Или напишите в Telegram <a href="https://t.me/shamcrm_uz" target="_blank" rel="noopener">@shamcrm_uz</a>.</div>
+  </div>
+</section>
+
 <section class="view hidden" id="v-otdel">
   <div class="card">
     <div class="eyebrow">Для отдела партнёров</div>
@@ -665,15 +681,44 @@ var dl={save:function(o){
   });
 }};
 
+/* ---------- код доступа: шаги 3–5 расшифровываются из secure.json (AES-GCM, ключ из кода через PBKDF2) ---------- */
+var SECURE=null,LOCKED=['obuchenie','ekzamen','sertifikat','otdel'],lockTarget='obuchenie';
+function normCode(c){return String(c||'').replace(/[^0-9A-Za-zА-Яа-яЁё]/g,'').toUpperCase()}
+function b64bytes(s){var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
+var boxP=null;
+function loadBox(){
+  if(!boxP){boxP=fetch('secure.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('box');return r.json()});boxP.catch(function(){boxP=null})}
+  return boxP;
+}
+/* true — код подошёл; false — неверный код; ошибка — нет сети или браузер слишком старый */
+function tryUnlock(code){
+  if(!(window.crypto&&crypto.subtle&&window.TextEncoder))return Promise.reject(new Error('nocrypto'));
+  return loadBox().then(function(box){
+    return crypto.subtle.importKey('raw',new TextEncoder().encode(normCode(code)),'PBKDF2',false,['deriveKey'])
+      .then(function(base){return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64bytes(box.salt),iterations:box.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt'])})
+      .then(function(key){return crypto.subtle.decrypt({name:'AES-GCM',iv:b64bytes(box.iv)},key,b64bytes(box.data))})
+      .then(function(buf){
+        var d=JSON.parse(new TextDecoder().decode(buf));
+        SECURE=d;MODS=d.mods||[];modulesBuilt=false;bankP=null;tplP=null;
+        state.accessCode=normCode(code);save();
+        return true;
+      },function(){return false});
+  });
+}
+function codeError(msg){$('#codeErr').textContent=msg;$('#f-code').classList.add('err')}
+function setUnlockBusy(b){$('#unlockBtn').disabled=b;$('#unlockBtn').textContent=b?'Проверяю…':'Открыть'}
+
 /* ---------- маршрутизация ---------- */
-var VIEWS=['start','anketa','dogovor','obuchenie','ekzamen','sertifikat','otdel'];
+var VIEWS=['start','anketa','dogovor','obuchenie','ekzamen','sertifikat','otdel','lock'];
 var currentView='start';
 function route(){
   var h=(location.hash||'').replace('#','');
-  if(VIEWS.indexOf(h)<0)h='start';
+  if(VIEWS.indexOf(h)<0||h==='lock')h='start';
+  var shown=h;
+  if(LOCKED.indexOf(h)>=0&&!SECURE){lockTarget=h;h='lock'}
   currentView=h;
   VIEWS.forEach(function(v){var el=$('#v-'+v);if(el)el.classList.toggle('hidden',v!==h)});
-  $$('.step').forEach(function(a){a.classList.toggle('active',a.dataset.step===h)});
+  $$('.step').forEach(function(a){a.classList.toggle('active',a.dataset.step===shown)});
   if(h==='anketa')renderAnketa();
   if(h==='dogovor')renderDogovor();
   if(h==='obuchenie')renderModules();
@@ -688,7 +733,7 @@ function stepDone(){
   return {
     anketa:!!state.anketaDone,
     dogovor:!!state.contract,
-    obuchenie:MODS.every(function(m){return state.read[m.id]}),
+    obuchenie:MODS.length>0&&MODS.every(function(m){return state.read[m.id]}),
     ekzamen:!!state.cert,
     sertifikat:!!state.cert
   };
@@ -906,7 +951,7 @@ function paintCrm(){
   if(s==='ok'){
     pill.className='pill ok';pill.textContent='Получено shamCRM';
     title.textContent='Анкета отправлена';
-    lead.textContent='Спасибо! Менеджер shamCRM свяжется с вами в течение 24 часов.';
+    lead.textContent='Спасибо! Менеджер shamCRM свяжется с вами в течение 24 часов, уточнит детали и выдаст код доступа к обучению.';
     grid.hidden=true;
   }else if(s==='fail'){
     pill.className='pill bad';pill.textContent='Не отправилось';
@@ -1018,45 +1063,10 @@ $('#contractSigned').checked=!!state.contract;
 $('#contractSigned').addEventListener('change',function(e){state.contract=e.target.checked;save();paintSteps()});
 
 /* =========================================================
-   3. ОБУЧЕНИЕ — темы модулей. Темы составлены по вопросам экзамена (exam.json).
-   Чтобы добавить видеоурок, вставьте ссылку в video: ссылку YouTube или файл, например 'video/modul-1.mp4'.
+   3. ОБУЧЕНИЕ — темы и видео модулей лежат в secure.json (зашифрованы кодом доступа).
+   Чтобы поменять темы или добавить видео: tools/secure.py decrypt → правка content.json → encrypt.
    ========================================================= */
-var MODS=[
- {id:1,title:'Знакомство с shamCRM',video:'',topics:[
-  'Что такое shamCRM и какие задачи бизнеса он решает',
-  'Из чего состоит продукт: CRM, звонки, учёт, интернет-магазин, Telegram Mini App, AI, аналитика',
-  'Каким компаниям подходит shamCRM и как подобрать модули под бизнес',
-  'Путь клиента: обращение → лид → сделка → следующее действие → результат',
-  'Почему вся информация о клиенте хранится в системе, а не в личных заметках',
-  'Как показывать продукт: от задачи клиента, а не от списка функций'
- ]},
- {id:2,title:'Настройки, интеграции и CRM',video:'',topics:[
-  'Настройки системы: пользователи, компания, роли и права доступа',
-  'Подключение каналов (мессенджеры, соцсети) и проверка, что они работают',
-  'Каналы и воронки: что меняется при переносе лида в другую воронку',
-  'Клиент, лид и сделка — в чём разница',
-  'Воронки и этапы сделок, источник обращения',
-  'Карточка клиента, дополнительные поля и как не создавать дубли',
-  'Разделы CRM: календарь, заказы, рассылки, реклама'
- ]},
- {id:3,title:'Управление командой и Call Center',video:'',topics:[
-  'Задачи: действие, ответственный, срок и статус',
-  'Проекты: как объединить связанные задачи',
-  'Контроль выполнения и просроченные задачи',
-  'Call Center: входящие и исходящие звонки',
-  'История звонков и детали разговора',
-  'Связь звонка с клиентом, сделкой и следующей задачей'
- ]},
- {id:4,title:'Учёт, интернет-магазин и Mini App',video:'',topics:[
-  'Склад и остатки товаров',
-  'Приход, продажа и возврат товара',
-  'Долги клиентов и начисление зарплат',
-  'Производство: сырьё и готовая продукция',
-  'Публикация товаров в интернет-магазине',
-  'Заказы с сайта и их обработка в shamCRM',
-  'Telegram Mini App: каталог и заказы в Telegram'
- ]}
-];
+var MODS=[];   // темы и видео модулей приходят из secure.json после ввода кода
 function lessonHTML(url){
   if(!url)return '<div class="lesson-soon"><i>▶</i><span>Видеоурок по этому модулю появится позже</span></div>';
   var m=String(url).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([\w-]{11})/);
@@ -1096,7 +1106,7 @@ vid.addEventListener('error',function(){$('#videoCard').classList.add('hidden')}
 var BANK=null,bankP=null;
 function loadBank(){
   if(bankP)return bankP;
-  bankP=fetch('exam.json').then(function(r){if(!r.ok)throw new Error('load');return r.json()}).then(function(d){
+  bankP=(SECURE?Promise.resolve(JSON.parse(JSON.stringify(SECURE.exam))):Promise.reject(new Error('locked'))).then(function(d){
     var gi=0;d.modules.forEach(function(m){m.qs.forEach(function(q){q.a=(('ABCD'.indexOf(d.k[gi])-gi*3)%4+4)%4;gi++})});BANK=d;return d;
   });
   bankP.catch(function(){bankP=null});
@@ -1223,7 +1233,7 @@ function showResult(){
    5. СЕРТИФИКАТ — шаблон Ироды, имя и дата подставляются автоматически
    ========================================================= */
 var tpl=null,tplP=null;
-function loadTpl(){if(tplP)return tplP;tplP=new Promise(function(res,rej){var im=new Image();im.onload=function(){tpl=im;res(im)};im.onerror=rej;im.src='cert-template.jpg'});return tplP}
+function loadTpl(){if(tplP)return tplP;if(!SECURE||!SECURE.cert)return Promise.reject(new Error('locked'));tplP=new Promise(function(res,rej){var im=new Image();im.onload=function(){tpl=im;res(im)};im.onerror=rej;im.src=SECURE.cert});tplP.catch(function(){tplP=null});return tplP}
 function fontsReady(text){
   var p=Promise.all([document.fonts.load('800 76px Manrope',(text||'')+'ABCАБВ'),document.fonts.load('500 34px Manrope','0123456789 /')]).catch(function(){});
   return Promise.race([p,new Promise(function(r){setTimeout(r,2500)})]);
@@ -1296,7 +1306,30 @@ $('#mPng').addEventListener('click',function(){if(manualCanvas)saveCanvas(manual
 $('#mPdf').addEventListener('click',function(){if(manualCanvas)saveCanvas(manualCanvas,$('#mName').value,'pdf')});
 
 /* ---------- старт ---------- */
+$('#lockForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var c=$('#accessCode').value;
+  if(!normCode(c)){codeError('Введите код доступа');return}
+  setUnlockBusy(true);
+  tryUnlock(c).then(function(ok){
+    setUnlockBusy(false);
+    if(!ok){codeError('Неверный код. Проверьте и попробуйте ещё раз');return}
+    toast('Доступ открыт');paintSteps();
+    if(location.hash==='#'+lockTarget)route();else location.hash='#'+lockTarget;
+  },function(err){
+    setUnlockBusy(false);
+    codeError(err&&err.message==='nocrypto'?'Браузер устарел — откройте страницу в свежем Chrome или Safari':'Не удалось загрузить данные. Проверьте интернет и попробуйте ещё раз');
+  });
+});
+$('#accessCode').addEventListener('input',function(){$('#f-code').classList.remove('err')});
+
 paintSteps();route();
+if(state.accessCode){
+  tryUnlock(state.accessCode).then(function(ok){
+    if(!ok){delete state.accessCode;save();codeError('Код доступа изменился — попросите новый у менеджера')}
+    paintSteps();route();
+  },function(){});
+}
 })();
 </script>
 </body>
