@@ -15,11 +15,10 @@
 | `promo.mp4`, `promo-poster.jpg` | Ролик для продаж и его обложка |
 | `logo-white.png`, `mark-white.png` | Логотипы |
 | `vendor/jspdf.umd.min.js` | Библиотека для скачивания сертификата в PDF |
-| `TZ-priem-zayavok-shamCRM.md` | ТЗ для техотдела: как shamCRM должна принимать анкеты |
 
 ## Как подключить shamCRM
 
-1. Техотдел делает приём заявок по ТЗ из файла `TZ-priem-zayavok-shamCRM.md` и выдаёт адрес.
+1. Техотдел shamCRM делает приём заявок с сайта и выдаёт адрес.
 2. На GitHub откройте `config.js`, нажмите на карандаш (Edit) и вставьте адрес в `crmUrl`:
    ```js
    crmUrl: 'https://адрес-от-техотдела',
