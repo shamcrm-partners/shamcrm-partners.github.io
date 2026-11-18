@@ -154,6 +154,8 @@ main{padding:28px 0 64px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px}
 .contacts{display:grid;gap:6px;font-weight:600}
+.dog-data{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:4px 14px;margin-top:8px;color:var(--ink)}
+.dog-data .muted{color:var(--muted)}
 .contacts a{text-decoration:none}
 .contacts a:hover{text-decoration:underline}
 
@@ -966,13 +968,17 @@ $('#newAnketa').addEventListener('click',function(){A={};crmBusy=false;state.ank
 var PDF_LINK='<a class="btn ghost" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">Прочитать договор (PDF)</a>';
 function renderDogovor(){
   var has=!!(state.anketaDone&&A&&A.legal_name);
-  $('#dogButtons').innerHTML=has
-    ?'<button type="button" class="btn primary" id="dlContract">Скачать договор с вашими данными (Word)</button>'+PDF_LINK
-    :'<a class="btn primary" href="#anketa">Сначала заполнить анкету</a>'+PDF_LINK+'<a class="btn line" href="files/Dogovor-shamCRM.docx" download="Dogovor-shamCRM-blank.docx">Пустой бланк (Word)</a>';
-  $('#dogHint').textContent=has
-    ?'В договор подставятся данные из анкеты: '+A.legal_name+'. Если чего-то не хватает — например, банковских реквизитов, — допишите в Word или исправьте анкету и скачайте заново.'
-    :'После анкеты здесь можно будет скачать договор, уже заполненный вашими данными.';
+  if(has){
+    var v=contractValues();
+    var rows=[['Организация',v.legal_name],['Руководитель',v.ceo],['ИНН',v.inn],['Юридический адрес',v.legal_addr],['Город',v.city],['Банк',v.bank],['Расчётный счёт',v.account],['МФО',v.mfo],['Телефон',v.phone],['Почта',v.email]];
+    $('#dogButtons').innerHTML='<button type="button" class="btn primary" id="dlContract">Скачать договор с вашими данными (Word)</button><a class="btn line" href="#anketa" id="dogEdit">Изменить данные</a>';
+    $('#dogHint').innerHTML='<b>В договор будет вписано:</b><span class="dog-data">'+rows.map(function(r){var val=String(r[1]||'').trim();return '<span>'+esc(r[0])+'</span><span'+(val?'':' class="muted"')+'>'+(val?esc(val):'не указано — останется пустая строка')+'</span>'}).join('')+'</span>';
+  }else{
+    $('#dogButtons').innerHTML='<a class="btn primary" href="#anketa">Сначала заполнить анкету</a><a class="btn ghost" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">Прочитать договор (PDF)</a>';
+    $('#dogHint').textContent='Сейчас договор пустой. После анкеты здесь появится кнопка — договор скачается уже с названием вашей организации и реквизитами.';
+  }
 }
+$('#dogButtons').addEventListener('click',function(e){if(e.target.closest('#dogEdit')){$('#formDone').dataset.edit='1';part=0}});
 var zipP=null;
 function loadJSZip(){
   if(window.JSZip)return Promise.resolve(window.JSZip);
