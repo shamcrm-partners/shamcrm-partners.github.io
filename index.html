@@ -445,14 +445,12 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);f
     <div class="eyebrow">Шаг 2 из 5</div>
     <h2 style="margin-top:8px">Партнёрский договор</h2>
     <div class="doc-card" style="margin-top:22px">
-      <div class="doc-ico">PDF</div>
+      <div class="doc-ico">DOCX</div>
       <div>
         <h3>Договор по распространению и внедрению онлайн-сервиса «ShamCRM»</h3>
-        <p class="muted" style="margin-top:6px">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Ознакомьтесь с договором заранее. Для подписания договор с вашими реквизитами отправит менеджер отдела партнёров после рассмотрения анкеты.</p>
-        <div class="row" style="margin-top:16px">
-          <a class="btn primary" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">Открыть договор (PDF)</a>
-          <a class="btn ghost" href="files/Dogovor-shamCRM.docx" download="Договор shamCRM.docx">Скачать в Word</a>
-        </div>
+        <p class="muted" style="margin-top:6px">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Договор заполняется данными из вашей анкеты — скачайте его, проверьте и отправьте менеджеру отдела партнёров для подписания.</p>
+        <div class="row" style="margin-top:16px" id="dogButtons"></div>
+        <p class="muted" id="dogHint" style="margin-top:10px;font-size:14px"></p>
       </div>
     </div>
   </div>
@@ -675,6 +673,7 @@ function route(){
   VIEWS.forEach(function(v){var el=$('#v-'+v);if(el)el.classList.toggle('hidden',v!==h)});
   $$('.step').forEach(function(a){a.classList.toggle('active',a.dataset.step===h)});
   if(h==='anketa')renderAnketa();
+  if(h==='dogovor')renderDogovor();
   if(h==='obuchenie')renderModules();
   if(h==='ekzamen')renderExamIntro();
   if(h==='sertifikat')renderCert();
@@ -713,7 +712,11 @@ var PARTS=[
     {id:'inn',n:'1.5',label:'ИНН',req:1,type:'text',im:'numeric'},
     {id:'site',n:'1.7',label:'Сайт',type:'url',ph:'https://'},
     {id:'legal_addr',n:'1.3',label:'Юридический адрес'},
-    {id:'fact_addr',n:'1.4',label:'Фактический адрес',same:1}
+    {id:'fact_addr',n:'1.4',label:'Фактический адрес',same:1},
+    {id:'city',n:'',label:'Город',ph:'Ташкент'},
+    {id:'bank',n:'',label:'Банк',hint:'Банковские реквизиты нужны для договора. Можно заполнить позже'},
+    {id:'account',n:'',label:'Расчётный счёт',im:'numeric'},
+    {id:'mfo',n:'',label:'МФО банка',im:'numeric'}
   ]},
   {title:'Контакты',fields:[
     {id:'ceo',n:'1.9',label:'ФИО руководителя компании',req:1},
@@ -865,6 +868,10 @@ function anketaPayload(){
     brand:A.brand||'',
     inn:A.inn||'',
     site:A.site||'',
+    city:A.city||'',
+    bank:A.bank||'',
+    account:A.account||'',
+    mfo:A.mfo||'',
     ceo:A.ceo||'',
     contact_name:A.contact||'',
     position:A.position||'',
@@ -955,7 +962,52 @@ $('#copyAnketa').addEventListener('click',function(){
 $('#editAnketa').addEventListener('click',function(){$('#formDone').dataset.edit='1';part=0;renderAnketa()});
 $('#newAnketa').addEventListener('click',function(){A={};crmBusy=false;state.anketa=null;state.anketaDone=false;save();$('#formDone').dataset.edit='1';part=0;renderAnketa();paintSteps()});
 
-/* ---------- 2. договор ---------- */
+/* ---------- 2. договор: шаблон files/Dogovor-shamCRM-shablon.docx заполняется данными анкеты ---------- */
+var PDF_LINK='<a class="btn ghost" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">Прочитать договор (PDF)</a>';
+function renderDogovor(){
+  var has=!!(state.anketaDone&&A&&A.legal_name);
+  $('#dogButtons').innerHTML=has
+    ?'<button type="button" class="btn primary" id="dlContract">Скачать договор с вашими данными (Word)</button>'+PDF_LINK
+    :'<a class="btn primary" href="#anketa">Сначала заполнить анкету</a>'+PDF_LINK+'<a class="btn line" href="files/Dogovor-shamCRM.docx" download="Dogovor-shamCRM-blank.docx">Пустой бланк (Word)</a>';
+  $('#dogHint').textContent=has
+    ?'В договор подставятся данные из анкеты: '+A.legal_name+'. Если чего-то не хватает — например, банковских реквизитов, — допишите в Word или исправьте анкету и скачайте заново.'
+    :'После анкеты здесь можно будет скачать договор, уже заполненный вашими данными.';
+}
+var zipP=null;
+function loadJSZip(){
+  if(window.JSZip)return Promise.resolve(window.JSZip);
+  if(zipP)return zipP;
+  zipP=new Promise(function(res,rej){var sc=document.createElement('script');sc.src='vendor/jszip.min.js';sc.onload=function(){res(window.JSZip)};sc.onerror=function(){zipP=null;rej(new Error('jszip'))};document.head.appendChild(sc)});
+  return zipP;
+}
+function xmlEsc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function contractValues(){
+  var a=A||{};
+  return {ad_name:a.brand||a.legal_name,city:a.city,ad_phone:a.phone,legal_name:a.legal_name,ceo:a.ceo,
+    legal_addr:a.legal_addr,fact_addr:a.same_addr?a.legal_addr:a.fact_addr,inn:a.inn,account:a.account,bank:a.bank,mfo:a.mfo,phone:a.phone,email:a.email};
+}
+/* {{ключ}} — значение или пусто; {{ключ_}} — значение или линия; {{ключ~}} — значение или подчёркнутое место */
+function fillContractXml(xml,v){
+  return xml.replace(/\{\{(\w+?)([_~]?)\}\}/g,function(_,k,f){
+    var val=String(v[k]==null?'':v[k]).trim();
+    if(val)return xmlEsc(val)+(f==='~'?'\u00a0\u00a0\u00a0':'');
+    return f==='_'?'______________':(f==='~'?new Array(29).join('\u00a0'):'');
+  });
+}
+function makeContract(){
+  var v=contractValues();
+  toast('Готовлю договор…');
+  Promise.all([loadJSZip(),fetch('files/Dogovor-shamCRM-shablon.docx').then(function(r){if(!r.ok)throw new Error('tpl');return r.arrayBuffer()})])
+    .then(function(res){return res[0].loadAsync(res[1])})
+    .then(function(zip){return zip.file('word/document.xml').async('string').then(function(xml){
+      zip.file('word/document.xml',fillContractXml(xml,v));
+      return zip.generateAsync({type:'blob',compression:'DEFLATE',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    })})
+    .then(function(blob){return dl.save({filename:'Dogovor-shamCRM-'+slug(v.ad_name||'partner')+'.docx',data:blob})})
+    .then(function(){toast('Договор скачан — проверьте данные и отправьте менеджеру')})
+    .catch(function(){toast('Не получилось подготовить договор. Обновите страницу и попробуйте ещё раз.')});
+}
+$('#dogButtons').addEventListener('click',function(e){if(e.target.closest('#dlContract'))makeContract()});
 $('#contractSigned').checked=!!state.contract;
 $('#contractSigned').addEventListener('change',function(e){state.contract=e.target.checked;save();paintSteps()});
 

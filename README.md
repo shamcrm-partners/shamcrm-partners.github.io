@@ -17,7 +17,8 @@
 | `promo.mp4`, `promo-poster.jpg` | Ролик для продаж и его обложка |
 | `logo-white.png`, `mark-white.png` | Логотипы |
 | `vendor/jspdf.umd.min.js` | Библиотека для скачивания сертификата в PDF |
-| `files/Dogovor-shamCRM.pdf`, `files/Dogovor-shamCRM.docx` | Партнёрский договор для шага «Договор». Чтобы обновить — загрузите новые файлы с теми же именами |
+| `files/Dogovor-shamCRM.pdf`, `files/Dogovor-shamCRM.docx` | Партнёрский договор: PDF для чтения и пустой бланк |
+| `files/Dogovor-shamCRM-shablon.docx` | Шаблон договора с метками `{{legal_name}}`, `{{inn}}` и т.д. — сайт подставляет в него данные анкеты. Если меняете текст договора, обновите и шаблон (метки должны остаться) |
 | `google-sheets/Code.gs` | Код для Google Таблицы, которая принимает анкеты |
 | `TZ-priem-zayavok-shamCRM.md` | ТЗ для техотдела: как shamCRM должна принимать анкеты |
 
