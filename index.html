@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Партнёрская программа shamCRM</title>
+<meta name="description" content="Станьте партнёром shamCRM: анкета, договор, обучение, экзамен и сертификат. До 50% от подписки.">
+<meta property="og:title" content="Партнёрская программа shamCRM">
+<meta property="og:description" content="Анкета, обучение, экзамен и сертификат партнёра. До 50% от подписки.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="mark-white.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Бренд shamCRM: синий логотипа + тёмно-синий сертификата, бирюзово-зелёный акцент имени из сертификата.
+     Раскладка: тёмная шапка со степпером из 5 этапов, ниже одна колонка карточек. */
+  --navy:#121A3A;
+  --navy-2:#1A2752;
+  --ink:#12163A;
+  --muted:#575F82;
+  --bg:#F4F5FB;
+  --surface:#FFFFFF;
+  --line:#E1E4F1;
+  --blue:#0A1BFF;
+  --blue-2:#4D6BFF;
+  --blue-soft:#EBEEFF;
+  --mint:#06FEE9;
+  --lime:#74DA61;
+  --ok:#0E9F66;
+  --ok-soft:#E3F7EE;
+  --bad:#D93D42;
+  --bad-soft:#FDECEC;
+  --f-display:'Unbounded','Manrope',system-ui,sans-serif;
+  --f-body:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r:16px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,video,canvas{max-width:100%;display:block}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.18;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.6vw,46px)}
+h2{font-size:clamp(22px,3vw,30px)}
+h3{font-size:18px}
+p{margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue-2);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.tabnum{font-variant-numeric:tabular-nums}
+
+/* ---------- шапка и степпер ---------- */
+.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.top-in{display:flex;align-items:center;gap:20px;min-height:68px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;flex:none}
+.brand img{width:30px;height:auto}
+.brand b{font-family:var(--f-display);font-weight:600;font-size:17px;letter-spacing:.01em}
+.brand em{font-style:normal;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.12);color:#C9D2FF}
+.steps{display:flex;gap:6px;margin-left:auto;overflow-x:auto;scrollbar-width:none;padding:12px 0}
+.steps::-webkit-scrollbar{display:none}
+.step{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 7px;border-radius:999px;color:#AEB7DA;text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap;border:1px solid transparent}
+.step i{font-style:normal;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);font-size:13px;font-weight:800;color:#DDE3FF}
+.step:hover{color:#fff;background:rgba(255,255,255,.06)}
+.step.active{color:#fff;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.08)}
+.step.active i{background:var(--blue);color:#fff}
+.step.done i{background:linear-gradient(135deg,var(--mint),var(--lime));color:var(--navy)}
+.step.admin{color:#FFD9A0}
+@media (max-width:860px){
+  .top-in{flex-direction:column;align-items:stretch;gap:0;min-height:0;padding-top:10px}
+  .steps{margin-left:0;padding:8px 0 10px}
+  .step span{display:none}
+  .step.active span{display:inline}
+}
+
+/* ---------- общие блоки ---------- */
+main{padding:28px 0 64px}
+.view{display:grid;gap:22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.card.tight{padding:20px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.lead{font-size:18px;color:var(--muted);max-width:62ch}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.g2,.g3{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:13px 20px;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;transition:transform .12s ease,background .15s ease,box-shadow .15s ease;min-height:48px}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;box-shadow:0 8px 22px -10px rgba(10,27,255,.7)}
+.btn.primary:hover{box-shadow:0 10px 26px -8px rgba(10,27,255,.75)}
+.btn.ghost{background:var(--blue-soft);color:var(--blue)}
+.btn.ghost:hover{background:#DDE2FF}
+.btn.line{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.line:hover{border-color:#C7CCE3}
+.btn.light{background:#fff;color:var(--navy)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.row.between{justify-content:space-between}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;background:var(--blue-soft);color:var(--blue)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.note{border-radius:12px;padding:14px 16px;background:var(--blue-soft);color:#1E2A7A;font-size:15px}
+.note.ok{background:var(--ok-soft);color:#0B6B46}
+.note.bad{background:var(--bad-soft);color:#8E1F23}
+.section-head{display:grid;gap:8px}
+.bar{height:8px;border-radius:999px;background:#E6E9F5;overflow:hidden}
+.bar>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--blue-2));transition:width .3s ease}
+.bar.mint>span{background:linear-gradient(90deg,var(--mint),var(--lime))}
+.bar.red>span{background:var(--bad)}
+.check{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);color:var(--blue)}
+.check svg{width:13px;height:13px}
+.list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.list li{display:flex;gap:12px;align-items:flex-start}
+.list li .check{margin-top:2px}
+
+/* ---------- старт: герой ---------- */
+.hero{position:relative;overflow:hidden;border-radius:22px;background:var(--navy);color:#fff;padding:44px 40px;isolation:isolate}
+.hero::before,.hero::after{content:"";position:absolute;z-index:-1;border-radius:4px;transform:rotate(-30deg)}
+.hero::before{width:620px;height:150px;right:-150px;top:70px;background:linear-gradient(90deg,#0D2E9E,#1565C0 60%,#1E88E5)}
+.hero::after{width:520px;height:90px;right:-60px;bottom:30px;background:linear-gradient(90deg,rgba(13,46,158,.9),rgba(30,136,229,.75))}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:36px;align-items:center}
+.hero .eyebrow{color:#9FB0FF}
+.hero h1{margin:10px 0 14px}
+.hero h1 span{background:linear-gradient(90deg,var(--mint),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{color:#C8D0EE}
+.hero .row{margin-top:26px}
+.route{background:rgba(9,14,38,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px}
+.route h3{font-size:15px;margin-bottom:14px;color:#DDE3FF}
+.route ol{list-style:none;margin:0;padding:0;display:grid;gap:4px;counter-reset:r}
+.route li{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:10px;counter-increment:r}
+.route li::before{content:counter(r);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;flex:none;background:rgba(255,255,255,.1);font-weight:800;font-size:13px}
+.route li.done::before{content:"✓";background:linear-gradient(135deg,var(--mint),var(--lime));color:var(--navy)}
+.route li b{display:block;font-size:15px}
+.route li small{color:#9FA9D0;font-size:13px}
+@media (max-width:860px){.hero{padding:30px 22px}.hero-grid{grid-template-columns:1fr}.hero::before{right:-380px}.hero::after{display:none}}
+
+.stat{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;background:linear-gradient(135deg,var(--blue),var(--blue-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.benefit{display:grid;gap:10px;align-content:start}
+.benefit p{color:var(--muted)}
+.tier{border-radius:var(--r);padding:22px;border:1px solid var(--line);background:var(--surface);display:grid;gap:12px}
+.tier.gold{background:linear-gradient(160deg,#141E46,#1C2C66);color:#fff;border-color:transparent}
+.tier.gold .muted{color:#B8C2E6}
+.tier-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tier .pct{display:flex;gap:22px}
+.tier .pct div{display:grid}
+.tier .pct b{font-family:var(--f-display);font-size:34px;line-height:1.1}
+.tier .pct small{font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px}
+.contacts{display:grid;gap:6px;font-weight:600}
+
+/* ---------- анкета ---------- */
+.form-shell{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
+@media (max-width:960px){.form-shell{grid-template-columns:1fr}}
+.form-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 6px}
+.form-progress button{border:0;background:none;padding:0;text-align:left;cursor:pointer;display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.form-progress button span{height:5px;border-radius:999px;background:#E3E6F3}
+.form-progress button.on{color:var(--ink)}
+.form-progress button.on span{background:linear-gradient(90deg,var(--blue),var(--blue-2))}
+.form-progress button.ok span{background:linear-gradient(90deg,var(--mint),var(--lime))}
+.fields{display:grid;gap:18px;margin-top:22px}
+.field{display:grid;gap:7px}
+.field label,.field .lbl{font-weight:700;font-size:15px;display:flex;gap:8px;align-items:baseline}
+.field label .num,.field .lbl .num{font-size:12px;color:var(--muted);font-weight:700;min-width:26px}
+.field label .req{color:var(--bad)}
+.field .hint{font-size:13px;color:var(--muted)}
+.field input[type=text],.field input[type=email],.field input[type=tel],.field input[type=url],.field input[type=number],.field textarea{width:100%;border:1.5px solid var(--line);background:#FBFBFE;border-radius:12px;padding:12px 14px;font-size:16px;transition:border-color .15s,box-shadow .15s,background .15s}
+.field textarea{min-height:92px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--blue-2);background:#fff;box-shadow:0 0 0 4px rgba(77,107,255,.14)}
+.field.err input,.field.err textarea{border-color:var(--bad);background:#FFF8F8}
+.field .errmsg{display:none;color:var(--bad);font-size:13px;font-weight:600}
+.field.err .errmsg{display:block}
+.suffix{position:relative}
+.suffix input{padding-right:110px!important}
+.suffix span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;font-weight:600;pointer-events:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.two{grid-template-columns:1fr}}
+.seg{display:inline-flex;justify-self:start;background:#EEF0F8;border-radius:12px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:9px 16px;border-radius:9px;font-weight:700;cursor:pointer;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--blue);box-shadow:0 2px 8px -3px rgba(18,22,58,.25)}
+.tick{display:flex;gap:10px;align-items:flex-start;font-size:15px;cursor:pointer}
+.tick input{width:20px;height:20px;accent-color:var(--blue);margin-top:2px;flex:none}
+.act-chips{display:flex;flex-wrap:wrap;gap:8px}
+.act{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 13px;font-weight:600;font-size:14px;cursor:pointer;text-align:left;display:inline-flex;gap:8px;align-items:center}
+.act small{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:6px}
+.act.main{background:var(--blue);border-color:var(--blue);color:#fff}
+.act.main small{background:rgba(255,255,255,.2)}
+.act.sec{border-color:var(--blue-2);color:var(--blue);background:var(--blue-soft)}
+.act.sec small{background:#fff}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.quick{display:flex;flex-wrap:wrap;gap:6px}
+.quick button{border:1px dashed #C9CEE6;background:none;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.quick button:hover{border-color:var(--blue-2);color:var(--blue)}
+.form-nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.aside{display:grid;gap:14px;position:sticky;top:96px}
+.aside .card{padding:20px}
+.summary{display:grid;gap:4px;font-size:15px}
+.summary h4{margin:14px 0 4px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.summary div{display:grid;grid-template-columns:minmax(140px,240px) 1fr;gap:12px;padding:7px 0;border-bottom:1px solid #EEF0F7}
+.summary div span:first-child{color:var(--muted)}
+@media (max-width:600px){.summary div{grid-template-columns:1fr;gap:2px}}
+.send-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.send-grid{grid-template-columns:1fr}}
+.send{border:1.5px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:8px;background:#fff;text-decoration:none;color:inherit;cursor:pointer;text-align:left}
+.send:hover{border-color:var(--blue-2)}
+.send b{font-size:15px}
+.send small{color:var(--muted);font-size:13px}
+
+/* ---------- договор ---------- */
+.doc-card{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.doc-ico{width:56px;height:68px;border-radius:10px;background:linear-gradient(160deg,var(--blue),var(--blue-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;letter-spacing:.05em}
+.terms{display:grid;gap:0}
+.terms div{display:grid;grid-template-columns:72px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid #EEF0F7}
+.terms div:last-child{border-bottom:0}
+.terms b{font-family:var(--f-display);font-size:13px;color:var(--blue);font-weight:600}
+
+/* ---------- обучение ---------- */
+.video-card{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:center}
+.video-card video{width:100%;aspect-ratio:9/16;border-radius:16px;background:var(--navy);object-fit:cover}
+@media (max-width:760px){.video-card{grid-template-columns:1fr}.video-card video{max-width:320px}}
+.module{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.module>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:20px 22px}
+.module>summary::-webkit-details-marker{display:none}
+.mod-num{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:18px;background:var(--blue-soft);color:var(--blue)}
+.module.read .mod-num{background:linear-gradient(135deg,var(--mint),var(--lime));color:var(--navy)}
+.mod-title{display:grid;gap:3px}
+.mod-title b{font-size:17px}
+.mod-title small{color:var(--muted);font-size:14px}
+.chev{width:22px;height:22px;transition:transform .2s;color:var(--muted)}
+.module[open] .chev{transform:rotate(180deg)}
+.mod-body{padding:0 22px 22px;display:grid;gap:20px;border-top:1px solid var(--line);padding-top:20px}
+.rule-group h4{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.rule-group ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rule-group li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:10px 12px;border-radius:10px;background:#F7F8FD}
+.rule-group li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue-2);margin:8px 0 0 7px}
+
+/* ---------- экзамен ---------- */
+.mode{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:4px;cursor:pointer;background:#fff;text-align:left}
+.mode.on{border-color:var(--blue);box-shadow:0 0 0 4px rgba(10,27,255,.08)}
+.mode b{font-size:16px}
+.mode small{color:var(--muted)}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.qtext{font-size:clamp(18px,2.3vw,22px);font-weight:700;line-height:1.4;margin:18px 0 20px}
+.opts{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:12px 16px 12px 12px;cursor:pointer;font-size:16px;line-height:1.45;transition:border-color .12s,background .12s}
+.opt:hover{border-color:#BFC6E8}
+.opt i{font-style:normal;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#EEF0F8;font-weight:800;color:var(--muted)}
+.opt.on{border-color:var(--blue);background:#F3F5FF}
+.opt.on i{background:var(--blue);color:#fff}
+.score-big{font-family:var(--f-display);font-weight:700;font-size:clamp(46px,8vw,72px);line-height:1}
+.mod-res{display:grid;gap:8px}
+.mod-res .row{justify-content:space-between}
+.review{display:grid;gap:12px}
+.review .item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px;font-size:15px}
+.review .item .yours{color:var(--bad)}
+.review .item .right{color:var(--ok);font-weight:600}
+
+/* ---------- сертификат ---------- */
+.cert-wrap{background:linear-gradient(160deg,#0F1633,#1A2752);border-radius:22px;padding:28px;display:grid;gap:20px}
+.cert-wrap img{border-radius:10px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);width:100%}
+.cert-wrap .row .muted{color:#B8C2E6}
+.locked{display:grid;gap:14px;justify-items:start}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .25s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#start"><img src="mark-white.png" alt="" width="30" height="29"><b>shamCRM</b><em>Партнёрам</em></a>
+    <nav class="steps" id="steps" aria-label="Этапы партнёрства">
+      <a class="step" href="#anketa" data-step="anketa"><i>1</i><span>Анкета</span></a>
+      <a class="step" href="#dogovor" data-step="dogovor"><i>2</i><span>Договор</span></a>
+      <a class="step" href="#obuchenie" data-step="obuchenie"><i>3</i><span>Обучение</span></a>
+      <a class="step" href="#ekzamen" data-step="ekzamen"><i>4</i><span>Экзамен</span></a>
+      <a class="step" href="#sertifikat" data-step="sertifikat"><i>5</i><span>Сертификат</span></a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= СТАРТ ================= -->
+<section class="view" id="v-start">
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Партнёрская программа</div>
+        <h1>Станьте партнёром <span>shamCRM</span></h1>
+        <p class="lead">shamCRM помогает объединить все каналы продаж, автоматизировать рутинные задачи, увеличить объём продаж и эффективность команды. Партнёр продаёт, внедряет и обучает, а получает до 50% от подписки.</p>
+        <div class="row">
+          <a class="btn primary" href="#anketa" id="startCta">Заполнить анкету</a>
+          <a class="btn light" href="#obuchenie">Посмотреть обучение</a>
+        </div>
+      </div>
+      <div class="route">
+        <h3>5 шагов до сертификата</h3>
+        <ol id="routeList">
+          <li data-r="anketa"><div><b>Анкета</b><small>ответ в течение 24 часов</small></div></li>
+          <li data-r="dogovor"><div><b>Партнёрский договор</b><small>подписание с shamCRM</small></div></li>
+          <li data-r="obuchenie"><div><b>Обучение</b><small>4 модуля по продукту</small></div></li>
+          <li data-r="ekzamen"><div><b>Экзамен</b><small>проходной балл 80% по каждому модулю</small></div></li>
+          <li data-r="sertifikat"><div><b>Сертификат</b><small>сразу после экзамена</small></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card benefit">
+      <div class="stat">до 50%</div>
+      <h3>Вознаграждение от продаж подписки</h3>
+      <p>Процент зависит от статуса партнёра: «Серебро» или «Золото».</p>
+    </div>
+    <div class="card benefit">
+      <div class="stat">30%</div>
+      <h3>От дополнительных опций</h3>
+      <p>Плюс доход от собственных услуг партнёра: обучения, внедрения, настройки и сопровождения клиентов.</p>
+    </div>
+    <div class="card benefit">
+      <div class="stat">24 ч</div>
+      <h3>Ответ на заявку</h3>
+      <p>Оставьте анкету — менеджер shamCRM ответит в течение 24 часов.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-head"><div class="eyebrow">Схема вознаграждения</div><h2>Статусы партнёра</h2><p class="muted">Базовые условия для обоих статусов: продажа, внедрение и обучение клиентов.</p></div>
+    <div class="grid g2" style="margin-top:20px">
+      <div class="tier">
+        <div class="tier-top"><h3>Серебро</h3><span class="pill">Стартовый статус</span></div>
+        <div class="pct"><div><b>40%</b><small class="muted">от подписки</small></div><div><b>30%</b><small class="muted">от доп. опций</small></div></div>
+      </div>
+      <div class="tier gold">
+        <div class="tier-top"><h3>Золото</h3><span class="pill" style="background:rgba(255,255,255,.14);color:#fff">Выручка партнёра больше 50 000 000 сум</span></div>
+        <div class="pct"><div><b>50%</b><small class="muted">от подписки</small></div><div><b>30%</b><small class="muted">от доп. опций</small></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="section-head"><div class="eyebrow">Что получает партнёр</div><h2>Возможности</h2></div>
+      <ul class="list" style="margin-top:18px">
+        <li><span class="check">✓</span><span>Совместные рекламные акции</span></li>
+        <li><span class="check">✓</span><span>Персональный менеджер для подготовки специалистов партнёра</span></li>
+        <li><span class="check">✓</span><span>Аккаунт с полным доступом к функционалу shamCRM для отдела продаж и управления командой партнёра</span></li>
+        <li><span class="check">✓</span><span>Возможность получения лидов от компании</span></li>
+        <li><span class="check">✓</span><span>Доступ к обучающим материалам и мастер-классам</span></li>
+        <li><span class="check">✓</span><span>Поддержка в настройке и проведении маркетинговых мероприятий</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="section-head"><div class="eyebrow">Дополнительный доход</div><h2>Ваши услуги клиентам</h2></div>
+      <ul class="list" style="margin-top:18px">
+        <li><span class="check">1</span><span>Обучение клиентов</span></li>
+        <li><span class="check">2</span><span>Внедрение системы в деятельность клиента</span></li>
+        <li><span class="check">3</span><span>Настройка и адаптация системы под бизнес клиента</span></li>
+        <li><span class="check">4</span><span>Сопровождение клиента</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-head"><div class="eyebrow">Кто может стать партнёром</div><h2>Партнёрство подходит, если вы</h2></div>
+    <div class="chips" style="margin-top:18px">
+      <span class="chip">IT-компания</span><span class="chip">Маркетинговое агентство</span><span class="chip">SMM-специалист</span>
+      <span class="chip">Бизнес-тренер</span><span class="chip">Консалтинговая фирма</span><span class="chip">Продавец ПО</span>
+      <span class="chip">Веб-студия</span><span class="chip">Бухгалтерская компания</span><span class="chip">Фрилансер</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. АНКЕТА ================= -->
+<section class="view hidden" id="v-anketa">
+  <div class="form-shell">
+    <div class="card" id="formCard">
+      <div class="eyebrow">Шаг 1 из 5</div>
+      <h2 style="margin-top:8px">Анкета партнёра</h2>
+      <p class="muted" style="margin-top:8px">Для организаций, которые планируют заключить договор «shamCRM: Партнёрство». ФИО указывайте полностью. Поля со звёздочкой обязательны.</p>
+      <div class="form-progress" id="formProgress"></div>
+      <form id="anketaForm" novalidate>
+        <div class="fields" id="formFields"></div>
+        <div class="form-nav">
+          <button type="button" class="btn line" id="prevPart">Назад</button>
+          <button type="submit" class="btn primary" id="nextPart">Далее</button>
+        </div>
+      </form>
+    </div>
+    <div class="card hidden" id="formDone">
+      <div class="row between"><div class="eyebrow">Анкета заполнена</div><span class="pill" id="crmState" hidden></span></div>
+      <h2 style="margin-top:8px" id="doneTitle">Остался один шаг: отправьте анкету менеджеру</h2>
+      <p class="muted" style="margin-top:8px" id="doneLead">Выберите удобный способ. Ответ — в течение 24 часов.</p>
+      <div class="send-grid" style="margin-top:20px">
+        <a class="send" id="sendTg" href="#" target="_blank" rel="noopener"><b>Отправить в Telegram</b><small>Откроется Telegram, выберите чат менеджера shamCRM</small></a>
+        <a class="send" id="sendMail" href="#"><b>Отправить на почту</b><small>info@shamcrm.com</small></a>
+        <button class="send" type="button" id="copyAnketa"><b>Скопировать текст</b><small>Вставьте в любой мессенджер</small></button>
+      </div>
+      <div class="summary" id="anketaSummary" style="margin-top:22px"></div>
+      <div class="row" style="margin-top:24px">
+        <a class="btn primary" href="#dogovor">Следующий шаг: договор</a>
+        <button class="btn line" type="button" id="editAnketa">Исправить ответы</button>
+        <button class="btn line" type="button" id="newAnketa">Новая анкета</button>
+      </div>
+    </div>
+    <aside class="aside">
+      <div class="card">
+        <h3>Что будет после анкеты</h3>
+        <ul class="list" style="margin-top:14px;font-size:15px">
+          <li><span class="check">1</span><span>Менеджер shamCRM ответит в течение 24 часов</span></li>
+          <li><span class="check">2</span><span>Подписание партнёрского договора</span></li>
+          <li><span class="check">3</span><span>Обучение и экзамен</span></li>
+          <li><span class="check">4</span><span>Сертификат, NFR-версия shamCRM и начало работы</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Контакты</h3>
+        <div class="contacts" style="margin-top:12px">
+          <span>+998 55 588 81 00</span>
+          <span>+998 77 375 68 68 <span class="muted">(директор)</span></span>
+          <span>info@shamcrm.com</span>
+          <a href="https://shamcrm.com" target="_blank" rel="noopener">shamcrm.com</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= 2. ДОГОВОР ================= -->
+<section class="view hidden" id="v-dogovor">
+  <div class="card">
+    <div class="eyebrow">Шаг 2 из 5</div>
+    <h2 style="margin-top:8px">Партнёрский договор</h2>
+    <div class="doc-card" style="margin-top:22px">
+      <div class="doc-ico">DOCX</div>
+      <div>
+        <h3>Договор по распространению и внедрению shamCRM</h3>
+        <p class="muted" style="margin-top:6px">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Договор отправляет менеджер отдела партнёров после рассмотрения анкеты.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-head"><div class="eyebrow">Главное в договоре</div><h2>Условия</h2></div>
+    <div class="terms" style="margin-top:14px">
+      <div><b>Статус</b><span>«Серебро» — стартовый: 40% от подписки и 30% от дополнительных опций. «Золото» — при выручке партнёра больше 50 000 000 сум: 50% и 30%. Статус присваивается по запросу партнёра, новый процент действует после присвоения.</span></div>
+      <div><b>Расчёты</b><span>Вознаграждение — это скидка от прайса. Клиент платит партнёру, партнёр перечисляет shamCRM сумму за вычетом своего вознаграждения, только безналично со своего расчётного счёта.</span></div>
+      <div><b>Услуги</b><span>Цену своих дополнительных услуг (обучение, внедрение, настройка, сопровождение) партнёр определяет сам.</span></div>
+      <div><b>Команда</b><span>У партнёра должен быть минимум 1 сотрудник, сдавший экзамен по shamCRM (п. 3.1).</span></div>
+      <div><b>Реклама</b><span>Логотип shamCRM в рекламе (п. 1.12), рекламный телефон (п. 3.5), активность в соцсети или на сайте (п. 3.6), офис или сайт на своём домене (п. 3.7). Без демпинга (п. 3.12).</span></div>
+      <div><b>Поддержка</b><span>Первые 6 месяцев поддержка бесплатна при наличии продаж (п. 2.8). Семинары shamCRM раз в полгода (п. 2.7), участие партнёра — минимум раз в год (п. 3.3).</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <label class="tick"><input type="checkbox" id="contractSigned"><span><b>Договор подписан</b><br><span class="muted">Отметьте, когда договор подписан обеими сторонами. Это нужно только для вашего прогресса на этой странице.</span></span></label>
+    <div class="row" style="margin-top:20px"><a class="btn primary" href="#obuchenie">Следующий шаг: обучение</a></div>
+  </div>
+</section>
+
+<!-- ================= 3. ОБУЧЕНИЕ ================= -->
+<section class="view hidden" id="v-obuchenie">
+  <div class="card">
+    <div class="row between">
+      <div class="section-head"><div class="eyebrow">Шаг 3 из 5</div><h2>Обучение: 4 модуля по продукту</h2></div>
+      <span class="pill" id="readCount">Изучено 0 из 4</span>
+    </div>
+    <p class="muted" style="margin-top:10px;max-width:70ch">В каждом модуле — правила работы с shamCRM, по которым составлен экзамен. Откройте модуль, прочитайте и отметьте «Изучено».</p>
+    <div class="bar" style="margin-top:16px"><span id="readBar" style="width:0%"></span></div>
+  </div>
+
+  <div class="card video-card" id="videoCard">
+    <video id="promoVideo" src="promo.mp4" poster="promo-poster.jpg" controls playsinline preload="metadata"></video>
+    <div style="display:grid;gap:12px;align-content:center">
+      <div class="eyebrow">Ролик для продаж · 33 секунды · 9:16</div>
+      <h2>shamCRM за полминуты</h2>
+      <p class="muted">Отправляйте ролик клиентам в Telegram и Instagram перед первым звонком или после демонстрации.</p>
+      <div class="row"><a class="btn ghost" href="promo.mp4" download="shamCRM-rolik.mp4" id="dlVideo">Скачать ролик (MP4)</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Кратко о продукте</div>
+    <p style="margin-top:10px;font-size:17px;max-width:72ch">shamCRM — простой, удобный и эффективный инструмент для управления продажами и задачами. Главные преимущества — лёгкость в использовании, интеграция с популярными мессенджерами, звонками, почтой и контроль задач. shamCRM помогает объединить все каналы продажи, автоматизировать рутинные задачи, увеличить объём продаж и эффективность команды.</p>
+  </div>
+
+  <div id="modules" class="grid"></div>
+
+  <div class="card">
+    <div class="row between">
+      <div><h3>Готовы к экзамену?</h3><p class="muted" style="margin-top:4px">40 вопросов, по 10 из каждого модуля. Проходной балл — 80% по каждому модулю.</p></div>
+      <a class="btn primary" href="#ekzamen">Перейти к экзамену</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. ЭКЗАМЕН ================= -->
+<section class="view hidden" id="v-ekzamen">
+  <div class="card" id="examIntro">
+    <div class="eyebrow">Шаг 4 из 5</div>
+    <h2 style="margin-top:8px">Экзамен по shamCRM</h2>
+    <p class="muted" style="margin-top:8px">В каждом вопросе выберите один вариант. Проходной результат — не менее 80% правильных ответов по каждому модулю. Сертификат выдаётся сразу после успешной сдачи.</p>
+    <div class="grid g2" style="margin-top:20px" id="modeGrid">
+      <button type="button" class="mode on" data-mode="partner"><b>Экзамен партнёра</b><small>40 вопросов · по 10 из каждого модуля</small></button>
+      <button type="button" class="mode" data-mode="full"><b>Полный контрольный тест</b><small>240 вопросов · 4 модуля по 60 · для сотрудников</small></button>
+    </div>
+    <div class="fields">
+      <div class="field" id="f-exName"><label for="exName">ФИО для сертификата <span class="req">*</span></label><input type="text" id="exName" autocomplete="name" placeholder="Например: Каримов Азиз Рустамович"><span class="hint">Так имя будет написано в сертификате. Можно латиницей или кириллицей.</span><span class="errmsg">Укажите ФИО</span></div>
+      <div class="field"><label for="exCompany">Компания</label><input type="text" id="exCompany" autocomplete="organization"></div>
+    </div>
+    <div class="row" style="margin-top:22px"><button class="btn primary" type="button" id="startExam">Начать экзамен</button><span class="muted" id="examLoad"></span></div>
+    <div class="note" id="resumeNote" style="margin-top:18px" hidden>У вас есть незавершённый экзамен. <button class="btn ghost" type="button" id="resumeExam" style="min-height:0;padding:8px 14px;margin-left:8px">Продолжить</button></div>
+  </div>
+
+  <div class="card hidden" id="examRun">
+    <div class="qhead"><span class="pill" id="qModule"></span><span class="muted tabnum" id="qCounter"></span></div>
+    <div class="bar" style="margin-top:14px"><span id="qBar"></span></div>
+    <div class="qtext" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="form-nav">
+      <button class="btn line" type="button" id="qPrev">Назад</button>
+      <button class="btn primary" type="button" id="qNext" disabled>Ответить</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="examResult">
+    <div class="row between">
+      <div class="eyebrow" id="resEyebrow"></div>
+      <span class="pill" id="resPill"></span>
+    </div>
+    <div class="row" style="margin-top:14px;align-items:flex-end;gap:18px">
+      <div class="score-big tabnum" id="resScore"></div>
+      <p class="muted" id="resText" style="max-width:52ch"></p>
+    </div>
+    <div class="grid g2" style="margin-top:22px" id="resModules"></div>
+    <p class="muted" id="resCrm" style="margin-top:14px;font-size:14px" hidden></p>
+    <div class="row" style="margin-top:24px" id="resActions"></div>
+    <details style="margin-top:22px" id="reviewWrap"><summary style="cursor:pointer;font-weight:700">Разбор ошибок</summary><div class="review" id="review" style="margin-top:14px"></div></details>
+  </div>
+</section>
+
+<!-- ================= 5. СЕРТИФИКАТ ================= -->
+<section class="view hidden" id="v-sertifikat">
+  <div class="card locked" id="certLocked">
+    <div class="eyebrow">Шаг 5 из 5</div>
+    <h2>Сертификат партнёра</h2>
+    <p class="muted">Сертификат с вашим ФИО и датой выдаётся сразу после успешной сдачи экзамена.</p>
+    <a class="btn primary" href="#ekzamen">Перейти к экзамену</a>
+  </div>
+  <div class="hidden" id="certReady" style="display:grid;gap:22px">
+    <div class="cert-wrap">
+      <div class="row between"><div><div class="eyebrow" style="color:#9FB0FF">Шаг 5 из 5 · экзамен сдан</div><h2 style="color:#fff;margin-top:6px">Поздравляем! Вы — сертифицированный партнёр</h2></div></div>
+      <img id="certImg" alt="Сертификат shamCRM">
+      <div class="row">
+        <button class="btn primary" type="button" id="dlPng">Скачать PNG</button>
+        <button class="btn light" type="button" id="dlPdf">Скачать PDF</button>
+        <a class="btn light" id="certTg" href="#" target="_blank" rel="noopener">Отправить менеджеру в Telegram</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-head"><div class="eyebrow">Что дальше</div><h2>Начало работы</h2></div>
+      <ul class="list" style="margin-top:16px">
+        <li><span class="check">1</span><span>Получение NFR-версии программы shamCRM</span></li>
+        <li><span class="check">2</span><span>Аккаунт с полным доступом к функционалу shamCRM для вашего отдела продаж и команды</span></li>
+        <li><span class="check">3</span><span>Персональный менеджер, обучающие материалы и мастер-классы</span></li>
+        <li><span class="check">4</span><span>Первые продажи, внедрения и совместные рекламные акции</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= КАБИНЕТ ОТДЕЛА ================= -->
+<section class="view hidden" id="v-otdel">
+  <div class="card">
+    <div class="eyebrow">Для отдела партнёров</div>
+    <h3 style="margin-top:8px">Выдать сертификат вручную</h3>
+    <p class="muted" style="margin-top:6px">Например, если экзамен принимали устно или на бумаге.</p>
+    <div class="two" style="margin-top:16px">
+      <div class="field"><label for="mName">ФИО</label><input type="text" id="mName"></div>
+      <div class="field"><label for="mDate">Дата</label><input type="text" id="mDate" placeholder="ДД.ММ.ГГГГ"></div>
+    </div>
+    <div class="row" style="margin-top:16px"><button class="btn primary" type="button" id="mMake">Сделать сертификат</button></div>
+    <div id="mOut" style="margin-top:18px" class="hidden"><img id="mImg" alt="Сертификат" style="border-radius:10px"><div class="row" style="margin-top:12px"><button class="btn ghost" type="button" id="mPng">Скачать PNG</button><button class="btn ghost" type="button" id="mPdf">Скачать PDF</button></div></div>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap row between"><span>shamCRM · ООО «SOFTTECH GROUP» · Ташкент</span><span>info@shamcrm.com · shamcrm.com</span></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+
+/* ---------- состояние (только в этом браузере) ---------- */
+var KEY='shamcrm-partner-v1';
+var state={anketa:null,anketaDone:false,contract:false,read:{},exam:null,cert:null};
+try{var saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)Object.assign(state,saved)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+var toastT;
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},2600)}
+
+/* ---------- отправка в CRM (адрес задаётся в config.js) ---------- */
+var CFG=window.SHAMCRM_CONFIG||{};
+var CRM_URL=String(CFG.crmUrl||'').trim();
+if(!state.clientId){
+  try{state.clientId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():''}catch(e){}
+  if(!state.clientId)state.clientId='p-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+  save();
+}
+function crmSend(payload){
+  if(!CRM_URL)return Promise.reject(new Error('off'));
+  payload.client_id=state.clientId;
+  payload.page_url=location.href.split('#')[0];
+  if(CFG.formKey)payload.form_key=String(CFG.formKey);
+  var ctrl=null,timer=null;
+  try{ctrl=new AbortController();timer=setTimeout(function(){ctrl.abort()},15000)}catch(e){}
+  return fetch(CRM_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined})
+    .then(function(r){if(timer)clearTimeout(timer);if(!r.ok)throw new Error('http '+r.status);return r.text()})
+    .then(function(txt){
+      var d=null;try{d=JSON.parse(txt)}catch(e){}
+      if(d&&d.ok===false)throw new Error('rejected');
+      return {lead_id:(d&&(d.lead_id||d.id))||null};
+    },function(err){if(timer)clearTimeout(timer);throw err});
+}
+
+/* ---------- скачивание файлов ---------- */
+var dl={save:function(o){
+  return new Promise(function(res,rej){
+    try{
+      var url=URL.createObjectURL(o.data);var a=document.createElement('a');
+      a.href=url;a.download=o.filename;a.rel='noopener';document.body.appendChild(a);a.click();
+      setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},4000);res();
+    }catch(e){rej(e)}
+  });
+}};
+
+/* ---------- маршрутизация ---------- */
+var VIEWS=['start','anketa','dogovor','obuchenie','ekzamen','sertifikat','otdel'];
+var currentView='start';
+function route(){
+  var h=(location.hash||'').replace('#','');
+  if(VIEWS.indexOf(h)<0)h='start';
+  currentView=h;
+  VIEWS.forEach(function(v){var el=$('#v-'+v);if(el)el.classList.toggle('hidden',v!==h)});
+  $$('.step').forEach(function(a){a.classList.toggle('active',a.dataset.step===h)});
+  if(h==='anketa')renderAnketa();
+  if(h==='obuchenie')renderModules();
+  if(h==='ekzamen')renderExamIntro();
+  if(h==='sertifikat')renderCert();
+  if(h==='otdel')refreshCertButtons();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+function stepDone(){
+  return {
+    anketa:!!state.anketaDone,
+    dogovor:!!state.contract,
+    obuchenie:MODS.every(function(m){return state.read[m.id]}),
+    ekzamen:!!state.cert,
+    sertifikat:!!state.cert
+  };
+}
+function paintSteps(){
+  var d=stepDone();
+  $$('.step').forEach(function(a){a.classList.toggle('done',!!d[a.dataset.step])});
+  $$('#routeList li').forEach(function(li){li.classList.toggle('done',!!d[li.dataset.r])});
+  var next=['anketa','dogovor','obuchenie','ekzamen','sertifikat'].filter(function(k){return !d[k]})[0];
+  var cta=$('#startCta');
+  var labels={anketa:'Заполнить анкету',dogovor:'Продолжить: договор',obuchenie:'Продолжить: обучение',ekzamen:'Продолжить: экзамен',sertifikat:'Открыть сертификат'};
+  cta.href='#'+(next||'sertifikat');cta.textContent=next?labels[next]:'Открыть сертификат';
+}
+
+/* =========================================================
+   1. АНКЕТА — упрощённая версия Excel-анкеты (те же вопросы, 4 части)
+   ========================================================= */
+var ACTS=['Продажа программного обеспечения','Сопровождение программного обеспечения','Разработка программного обеспечения','Хостинг программных продуктов','Продажа законодательных баз данных','Услуги по сдаче электронной отчётности','Аудиторские услуги, бухгалтерский консалтинг','Образовательная деятельность','Сборка и продажа компьютерной техники','Локальные вычислительные сети','Другие сферы деятельности'];
+var PARTS=[
+  {title:'Компания',fields:[
+    {id:'legal_name',n:'1.1',label:'Юридическое наименование организации',req:1,ph:'ООО «…»'},
+    {id:'brand',n:'1.2',label:'Рекламное наименование',hint:'Как вас знают клиенты, если отличается от юридического'},
+    {id:'inn',n:'1.5',label:'ИНН',req:1,type:'text',im:'numeric'},
+    {id:'site',n:'1.7',label:'Сайт',type:'url',ph:'https://'},
+    {id:'legal_addr',n:'1.3',label:'Юридический адрес'},
+    {id:'fact_addr',n:'1.4',label:'Фактический адрес',same:1}
+  ]},
+  {title:'Контакты',fields:[
+    {id:'ceo',n:'1.9',label:'ФИО руководителя компании',req:1},
+    {id:'contact',n:'1.10',label:'ФИО контактного лица',req:1},
+    {id:'position',n:'',label:'Должность контактного лица',req:1},
+    {id:'phone',n:'1.6',label:'Контактный телефон',req:1,type:'tel',ph:'+998 __ ___ __ __'},
+    {id:'email',n:'1.8',label:'Электронная почта',req:1,type:'email'}
+  ]},
+  {title:'О компании',fields:[
+    {id:'founded',n:'2.1',label:'Год основания',type:'number',suffix:'год',hint:'Если юридические лица менялись, укажите год основания самого первого'},
+    {id:'staff',n:'2.2',label:'Сотрудников сейчас',type:'number',suffix:'чел.'},
+    {id:'founders',n:'2.3',label:'Учредители (акционеры)',area:1,small:1},
+    {id:'holding',n:'2.4',label:'Входит ли компания в холдинг (группу лиц)?',yesno:1,follow:'Название головной организации или холдинга и виды деятельности других компаний холдинга'},
+    {id:'acts',n:'2.5',label:'Виды деятельности, которые вы уже ведёте',acts:1},
+    {id:'acts_comment',n:'',label:'Комментарий к видам деятельности',area:1,small:1,hint:'Специализация, отрасль; какое ПО продаёте, сопровождаете, разрабатываете или хостите; через какого оператора сдаёте отчётность'}
+  ]},
+  {title:'Партнёрство',fields:[
+    {id:'source',n:'3.1',label:'Как вы узнали о договоре «shamCRM: Партнёрство»?',quick:['Сайт shamcrm.com','Instagram','Telegram','Рекомендация','Мероприятие']},
+    {id:'clear',n:'3.2',label:'Все ли пункты договора вам понятны?',yesno:1,yes:'Да, всё понятно',no:'Нужны пояснения',followOn:'no',follow:'По каким условиям договора нужны пояснения?'},
+    {id:'motive',n:'3.3',label:'Что побудило вас заключить договор «shamCRM: Партнёрство»?',area:1},
+    {id:'plans',n:'3.4',label:'Ваши планы по развитию направления на ближайшие 6 месяцев',area:1},
+    {id:'leads',n:'3.5',label:'Сколько потенциальных клиентов уже готовы работать с вами по shamCRM?',type:'number',suffix:'организаций'},
+    {id:'team',n:'3.6',label:'Сколько сотрудников планируете задействовать в направлении shamCRM?',type:'number',suffix:'чел.'},
+    {id:'consent',consent:1,label:'Согласен(на) на обработку указанных данных для рассмотрения заявки'}
+  ]}
+];
+var part=0;
+var A=state.anketa||{};
+function setA(k,v){A[k]=v;state.anketa=A;save()}
+
+function fieldHTML(f){
+  var v=A[f.id];
+  var num=f.n?'<span class="num">'+f.n+'</span>':'<span class="num"></span>';
+  var req=f.req?' <span class="req">*</span>':'';
+  var hint=f.hint?'<span class="hint">'+esc(f.hint)+'</span>':'';
+  if(f.consent){
+    return '<div class="field" id="f-'+f.id+'"><label class="tick"><input type="checkbox" data-k="'+f.id+'"'+(v?' checked':'')+'><span>'+esc(f.label)+' <span class="req">*</span></span></label><span class="errmsg">Нужно согласие, чтобы отправить анкету</span></div>';
+  }
+  if(f.yesno){
+    var yes=f.yes||'Да',no=f.no||'Нет',on=f.followOn||'yes';
+    var fv=A[f.id+'_text']||'';
+    return '<div class="field" id="f-'+f.id+'"><span class="lbl">'+num+esc(f.label)+'</span><div class="seg" data-yn="'+f.id+'"><button type="button" data-v="yes" class="'+(v==='yes'?'on':'')+'">'+esc(yes)+'</button><button type="button" data-v="no" class="'+(v==='no'?'on':'')+'">'+esc(no)+'</button></div>'+
+      '<div class="'+(v===on?'':'hidden')+'" data-follow="'+f.id+'" style="margin-top:6px"><textarea data-k="'+f.id+'_text" placeholder="'+esc(f.follow)+'" aria-label="'+esc(f.follow)+'">'+esc(fv)+'</textarea></div></div>';
+  }
+  if(f.acts){
+    var sel=A.acts||{};
+    var chips=ACTS.map(function(a,i){var s=sel[i];var cls=s==='main'?'act main':s==='sec'?'act sec':'act';var tag=s==='main'?'<small>основное</small>':s==='sec'?'<small>второстеп.</small>':'';return '<button type="button" class="'+cls+'" data-act="'+i+'">'+esc(a)+tag+'</button>'}).join('');
+    return '<div class="field" id="f-acts"><span class="lbl">'+num+esc(f.label)+'</span><div class="legend"><span><i style="background:var(--blue)"></i>1 нажатие — основное направление</span><span><i style="background:var(--blue-soft);border:1.5px solid var(--blue-2)"></i>2 нажатия — второстепенное</span><span>3 — убрать</span></div><div class="act-chips">'+chips+'</div></div>';
+  }
+  var input;
+  if(f.area){input='<textarea id="in-'+f.id+'" data-k="'+f.id+'"'+(f.small?' style="min-height:70px"':'')+'>'+esc(v||'')+'</textarea>'}
+  else{
+    var t=f.type||'text';
+    input='<input type="'+t+'" id="in-'+f.id+'" data-k="'+f.id+'" value="'+esc(v||'')+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+(f.im?' inputmode="'+f.im+'"':'')+(t==='number'?' min="0" inputmode="numeric"':'')+'>';
+    if(f.suffix)input='<div class="suffix">'+input+'<span>'+esc(f.suffix)+'</span></div>';
+  }
+  var extra='';
+  if(f.same){extra='<label class="tick" style="font-size:14px"><input type="checkbox" id="sameAddr"'+(A.same_addr?' checked':'')+'><span>Совпадает с юридическим</span></label>'}
+  if(f.quick){extra='<div class="quick">'+f.quick.map(function(q){return '<button type="button" data-quick="'+f.id+'">'+esc(q)+'</button>'}).join('')+'</div>'}
+  var msg=f.type==='email'?'Проверьте адрес почты':'Заполните это поле';
+  return '<div class="field" id="f-'+f.id+'"><label for="in-'+f.id+'">'+num+esc(f.label)+req+'</label>'+input+extra+hint+'<span class="errmsg">'+msg+'</span></div>';
+}
+function renderAnketa(){
+  if(state.anketaDone&&!$('#formDone').dataset.edit){showDone();return}
+  $('#formCard').classList.remove('hidden');$('#formDone').classList.add('hidden');
+  $('#formProgress').innerHTML=PARTS.map(function(p,i){return '<button type="button" data-part="'+i+'" class="'+(i===part?'on':i<part?'ok':'')+'"><span></span>'+(i+1)+'. '+esc(p.title)+'</button>'}).join('');
+  $('#formFields').innerHTML=PARTS[part].fields.map(fieldHTML).join('');
+  $('#prevPart').style.visibility=part===0?'hidden':'visible';
+  $('#nextPart').textContent=part===PARTS.length-1?'Готово — отправить анкету':'Далее';
+  if(A.same_addr){var fa=$('#in-fact_addr');if(fa){fa.value=A.legal_addr||'';fa.disabled=true}}
+}
+$('#formFields').addEventListener('input',function(e){
+  var k=e.target.dataset.k;if(!k)return;
+  setA(k,e.target.type==='checkbox'?e.target.checked:e.target.value);
+  var fld=e.target.closest('.field');if(fld)fld.classList.remove('err');
+});
+$('#formFields').addEventListener('change',function(e){
+  if(e.target.id==='sameAddr'){setA('same_addr',e.target.checked);var fa=$('#in-fact_addr');if(fa){fa.disabled=e.target.checked;if(e.target.checked){fa.value=A.legal_addr||'';setA('fact_addr',A.legal_addr||'')}}}
+  if(e.target.dataset.k&&e.target.type==='checkbox'){setA(e.target.dataset.k,e.target.checked);var f=e.target.closest('.field');if(f)f.classList.remove('err')}
+});
+$('#formFields').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  var seg=b.closest('[data-yn]');
+  if(seg){var id=seg.dataset.yn;setA(id,b.dataset.v);$$('button',seg).forEach(function(x){x.classList.toggle('on',x===b)});
+    var f=PARTS[part].fields.filter(function(x){return x.id===id})[0];var on=(f&&f.followOn)||'yes';var fol=$('[data-follow="'+id+'"]');if(fol)fol.classList.toggle('hidden',b.dataset.v!==on);return}
+  if(b.dataset.act!=null){var sel=Object.assign({},A.acts||{});var i=b.dataset.act;sel[i]=!sel[i]?'main':sel[i]==='main'?'sec':undefined;if(!sel[i])delete sel[i];setA('acts',sel);renderAnketa();return}
+  if(b.dataset.quick){var inp=$('#in-'+b.dataset.quick);inp.value=b.textContent;setA(b.dataset.quick,b.textContent);inp.focus();return}
+});
+$('#formProgress').addEventListener('click',function(e){var b=e.target.closest('[data-part]');if(!b)return;var to=+b.dataset.part;if(to>part&&!validatePart())return;part=to;renderAnketa()});
+$('#prevPart').addEventListener('click',function(){if(part>0){part--;renderAnketa()}});
+function validatePart(){
+  var ok=true,first=null;
+  PARTS[part].fields.forEach(function(f){
+    var el=$('#f-'+f.id);if(!el)return;var bad=false;var v=A[f.id];
+    if(f.consent)bad=!v;
+    else if(f.req)bad=!String(v||'').trim();
+    if(!bad&&f.type==='email'&&v)bad=!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim());
+    el.classList.toggle('err',bad);if(bad){ok=false;first=first||el}
+  });
+  if(first){var i=first.querySelector('input,textarea');if(i)i.focus();first.scrollIntoView({block:'center',behavior:'smooth'})}
+  return ok;
+}
+$('#anketaForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!validatePart())return;
+  if(part<PARTS.length-1){part++;renderAnketa();$('#formCard').scrollIntoView({block:'start'});return}
+  submitAnketa();
+});
+function anketaRows(){
+  var rows=[];
+  PARTS.forEach(function(p){
+    var items=[];
+    p.fields.forEach(function(f){
+      if(f.consent)return;
+      var v;
+      if(f.acts){var sel=A.acts||{};var m=[],s=[];Object.keys(sel).forEach(function(i){(sel[i]==='main'?m:s).push(ACTS[i])});v=(m.length?'Основное: '+m.join(', '):'')+(m.length&&s.length?'; ':'')+(s.length?'Второстепенное: '+s.join(', '):'')}
+      else if(f.yesno){var yv=A[f.id];v=yv?(yv==='yes'?(f.yes||'Да'):(f.no||'Нет')):'';var t=A[f.id+'_text'];if(t&&yv===(f.followOn||'yes'))v+=' — '+t}
+      else{v=A[f.id];if(f.suffix&&v!==''&&v!=null)v=v+' '+f.suffix}
+      if(f.id==='fact_addr'&&A.same_addr)v=A.legal_addr?A.legal_addr:'совпадает с юридическим';
+      if(v!=null&&String(v).trim()!=='')items.push([(f.n?f.n+' ':'')+f.label,String(v).trim()]);
+    });
+    rows.push({title:p.title,items:items});
+  });
+  return rows;
+}
+function anketaText(){
+  var t='АНКЕТА ПАРТНЁРА shamCRM\n';
+  anketaRows().forEach(function(g){if(!g.items.length)return;t+='\n'+g.title.toUpperCase()+'\n';g.items.forEach(function(it){t+=it[0].replace(/^[\d.]+ /,'')+': '+it[1]+'\n'})});
+  return t;
+}
+function submitAnketa(){
+  state.anketaDone=true;A.submittedAt=new Date().toISOString();state.anketa=A;save();
+  delete $('#formDone').dataset.edit;
+  if(!$('#exName').value&&A.contact)$('#exName').value=A.contact;
+  if(!$('#exCompany').value)$('#exCompany').value=A.brand||A.legal_name||'';
+  showDone();paintSteps();
+  sendAnketaToCrm();
+}
+/* Анкета → лид в CRM */
+var crmBusy=false;
+function anketaPayload(){
+  var answers=[];
+  anketaRows().forEach(function(g){g.items.forEach(function(it){answers.push({section:g.title,question:it[0].replace(/^[\d.]+ /,''),answer:it[1]})})});
+  return {
+    type:'anketa',
+    lead_id:A._leadId||null,
+    submitted_at:A.submittedAt,
+    company:A.brand||A.legal_name||'',
+    legal_name:A.legal_name||'',
+    brand:A.brand||'',
+    inn:A.inn||'',
+    site:A.site||'',
+    ceo:A.ceo||'',
+    contact_name:A.contact||'',
+    position:A.position||'',
+    phone:A.phone||'',
+    email:A.email||'',
+    potential_clients:A.leads||'',
+    team_size:A.team||'',
+    source:A.source||'',
+    answers:answers,
+    text:anketaText()
+  };
+}
+function sendAnketaToCrm(){
+  if(!CRM_URL||crmBusy)return;
+  var a=A;
+  crmBusy=true;a._crm='sending';state.anketa=a;save();paintCrm();
+  crmSend(anketaPayload()).then(function(res){
+    if(a!==A)return;
+    crmBusy=false;a._crm='ok';if(res&&res.lead_id)a._leadId=res.lead_id;state.anketa=a;save();paintCrm();
+  },function(){
+    if(a!==A)return;
+    crmBusy=false;a._crm='fail';state.anketa=a;save();paintCrm();
+  });
+}
+function paintCrm(){
+  var pill=$('#crmState'),title=$('#doneTitle'),lead=$('#doneLead');
+  if(!CRM_URL){pill.hidden=true;return}
+  var s=A._crm;if(s==='sending'&&!crmBusy)s='fail';
+  pill.hidden=false;
+  if(s==='ok'){
+    pill.className='pill ok';pill.textContent='Получено shamCRM';
+    title.textContent='Анкета отправлена менеджеру';
+    lead.textContent='Менеджер shamCRM ответит в течение 24 часов. Если хотите, продублируйте анкету в Telegram или на почту.';
+  }else if(s==='fail'){
+    pill.className='pill bad';pill.textContent='Не отправилось';
+    title.textContent='Отправьте анкету менеджеру';
+    lead.innerHTML='Автоматически отправить не получилось. Выберите способ ниже или <button type="button" class="btn ghost" id="retryCrm" style="min-height:0;padding:6px 12px;margin-left:4px">попробуйте ещё раз</button>';
+  }else{
+    pill.className='pill';pill.textContent='Отправляем…';
+    title.textContent='Отправляем анкету менеджеру…';
+    lead.textContent='Это займёт несколько секунд.';
+  }
+}
+$('#formDone').addEventListener('click',function(e){if(e.target.closest('#retryCrm'))sendAnketaToCrm()});
+var SHORT={legal_name:'Юр. наименование',brand:'Бренд',inn:'ИНН',site:'Сайт',legal_addr:'Юр. адрес',fact_addr:'Факт. адрес',ceo:'Руководитель',contact:'Контакт',position:'Должность',phone:'Телефон',email:'Почта',founded:'Год основания',staff:'Сотрудников',founders:'Учредители',holding:'Холдинг',acts:'Деятельность',acts_comment:'Комментарий',source:'Откуда узнали',clear:'Договор понятен',motive:'Мотив',plans:'Планы на 6 мес.',leads:'Потенциальных клиентов',team:'Сотрудников на shamCRM'};
+function shortText(){
+  /* Для Telegram и почты: короткие подписи, длинные ответы сокращаются, чтобы ссылка открывалась */
+  var lims=[400,160,80,0],t='';
+  for(var li=0;li<lims.length;li++){
+    var L=lims[li];t='Анкета партнёра shamCRM\n';
+    PARTS.forEach(function(p){p.fields.forEach(function(f){
+      if(f.consent)return;var row=null;
+      anketaRows().forEach(function(g){g.items.forEach(function(it){if(it[0]===(f.n?f.n+' ':'')+f.label)row=it})});
+      if(!row)return;var v=row[1];
+      if(v.length>L){if(f.area&&L===0)return;if(L>0)v=v.slice(0,L-1)+'…'}
+      t+=(SHORT[f.id]||f.label)+': '+v+'\n';
+    })});
+    if(encodeURIComponent(t).length<4500)break;
+  }
+  return t;
+}
+function showDone(){
+  $('#formCard').classList.add('hidden');$('#formDone').classList.remove('hidden');
+  var txt=shortText();
+  $('#sendTg').href='https://t.me/share/url?url='+encodeURIComponent('https://shamcrm.com')+'&text='+encodeURIComponent(txt);
+  $('#sendMail').href='mailto:info@shamcrm.com?subject='+encodeURIComponent('Анкета партнёра shamCRM — '+(A.legal_name||''))+'&body='+encodeURIComponent(txt);
+  $('#anketaSummary').innerHTML=anketaRows().map(function(g){if(!g.items.length)return '';return '<h4>'+esc(g.title)+'</h4>'+g.items.map(function(it){return '<div><span>'+esc(it[0].replace(/^[\d.]+ /,''))+'</span><span>'+esc(it[1])+'</span></div>'}).join('')}).join('');
+  paintCrm();
+}
+$('#copyAnketa').addEventListener('click',function(){
+  var txt=anketaText();
+  try{navigator.clipboard.writeText(txt).then(function(){toast('Анкета скопирована')},function(){toast('Не удалось скопировать. Выделите текст ниже вручную.')})}catch(e){toast('Не удалось скопировать. Выделите текст ниже вручную.')}
+});
+$('#editAnketa').addEventListener('click',function(){$('#formDone').dataset.edit='1';part=0;renderAnketa()});
+$('#newAnketa').addEventListener('click',function(){A={};crmBusy=false;state.anketa=null;state.anketaDone=false;save();$('#formDone').dataset.edit='1';part=0;renderAnketa();paintSteps()});
+
+/* ---------- 2. договор ---------- */
+$('#contractSigned').checked=!!state.contract;
+$('#contractSigned').addEventListener('change',function(e){state.contract=e.target.checked;save();paintSteps()});
+
+/* =========================================================
+   3. ОБУЧЕНИЕ — правила из контрольного теста (правильные ответы), сгруппированы по темам
+   ========================================================= */
+var MODS=[
+ {id:1,title:'Знакомство с shamCRM и общая логика продукта',topics:'Назначение продукта, модули, бизнес-задачи, путь клиента и связи между разделами',groups:[
+  ['Что такое shamCRM',['Используйте shamCRM как единую среду для работы с клиентами, продажами и связанными бизнес-процессами.','shamCRM подходит компаниям, где есть обращения, работа с клиентами, продажи и потребность контролировать сотрудников.','CRM является основой работы менеджера с клиентами, лидами, сделками и этапами.','Для разных бизнесов набор используемых возможностей shamCRM будет различаться.']],
+  ['Путь клиента',['Видьте путь работы как последовательность: обращение, работа менеджера, этап сделки, следующее действие и результат.','Связывайте информацию о клиенте с обращением, сделкой, следующей задачей и результатом работы.','Используйте воронку, чтобы видеть этап работы с клиентом и следующее действие.','Ориентируйтесь на фактический этап сделки и предусмотренное следующее действие.','Фиксируйте последующее действие задачей, если после разговора нужно перезвонить, отправить информацию или подготовить предложение.','Фиксируйте информацию о клиенте в CRM, а не оставляйте её только в личных заметках.']],
+  ['Каналы и модули',['Связывайте доступные коммуникации с общей историей работы с клиентом.','Используйте модуль телефонных коммуникаций и Call Center, когда бизнесу важны звонки и их история.','Проверяйте наличие товара и связанные учётные данные, если продажа зависит от запаса и задолженности.','Связывайте интернет-заказ с дальнейшей работой внутри shamCRM.','Рассматривайте Mini App как дополнительный канал взаимодействия с клиентом и оформления заказа.','Используйте AI как набор инструментов для автоматизации и анализа конкретных процессов, учитывая изучаемую конфигурацию.','Используйте аналитику, чтобы оценивать результаты и видеть картину работы, а не заменять ею фиксацию действий.']],
+  ['Как показывать продукт клиенту',['Сначала выясните задачу бизнеса и только затем подбирайте нужные возможности продукта.','Объясняйте функцию через решаемую проблему клиента и ожидаемый результат.','Перед подключением другого специалиста поймите текущую ситуацию клиента и нужный следующий этап процесса.']]
+ ]},
+ {id:2,title:'Настройки, интеграции и CRM',topics:'Настройки и права доступа, интеграции, клиенты, лиды, сделки, воронки и основные разделы CRM',groups:[
+  ['Настройки и права доступа',['Раздел настроек — для организации пользователей, компании, прав, интеграций и других параметров системы.','Системные настройки выполняет администратор или сотрудник с соответствующими правами.','Сначала проверьте роль и необходимые разрешения, предоставляя только доступ, нужный для работы.','Применяйте настройки прав доступа только к нужным действиям и ролям.']],
+  ['Интеграции и каналы',['Проверьте доступность конкретного канала и фактические настройки перед тем, как обещать его работу клиенту.','Проверьте настройки интеграции и корректность связи, а не делайте вывод по одному лишь наличию раздела.','Учитывайте, что каналы интеграций привязаны к воронкам и перенос может изменить доступность чата из прежней воронки.','Проверьте связь между каналом, воронкой и доступным чатом перед тем, как продолжать общение из новой воронки.']],
+  ['Клиент, лид, сделка',['Различайте клиента как запись о лице или компании, лид как потенциальное обращение и сделку как коммерческую работу.','Сопоставляйте лид с клиентом и дальнейшей сделкой так, чтобы сохранялась логика перехода от обращения к продаже.','Источник обозначает происхождение обращения, а этап сделки — состояние текущей работы.','Этап сделки — для текущего состояния, задача — для конкретного следующего действия.','Используйте воронку со стадиями для отображения последовательности работы по сделкам.','Показывайте реальное положение дел по сделке и не меняйте этап ради визуальной активности.','Если для квалификации не хватает сведений: сохраните известную информацию, определите, чего не хватает, и запланируйте следующий контакт.','Поддерживайте актуальность и полноту карточки клиента, чтобы дальнейшая работа опиралась на общий контекст.','Добавьте пользовательское поле, если нужно сохранять дополнительный параметр, которого нет в стандартном наборе.']],
+  ['Разделы CRM и подход к клиенту',['Проверьте календарь и планирование, когда нужно организовать события и ориентироваться в датах.','Рассылки, события, планирование, заказы, календарь и реклама — разные разделы, которые поддерживают разные процессы.','Уточните потребность и используйте CRM для поддержки последовательной работы, а не обещайте функции без проверки.']]
+ ]},
+ {id:3,title:'Управление командой и Call Center',topics:'Задачи, проекты, ответственные, сроки, статусы, контроль выполнения, входящие и исходящие звонки, история звонков',groups:[
+  ['Задачи',['Создавайте задачу с конкретным действием, ответственным и сроком.','Заполняйте задачу понятным действием, чтобы исполнитель понимал ожидаемый результат.','Назначайте ответственного, чтобы было ясно, кто отвечает за выполнение задачи.','Устанавливайте реалистичный срок, отражающий договорённость и позволяющий проверить своевременность исполнения.','Обновляйте статус задачи в соответствии с её фактическим состоянием.','Используйте задачи для контроля конкретных действий сотрудников и хода выполнения.','Когда задача задерживается, проверьте ответственного, срок и актуальный статус.','Передавайте руководителю фактическую картину исполнения по задачам, используя актуальные статусы и сроки.']],
+  ['Проекты',['Используйте проект для объединения связанной работы, состоящей из нескольких задач.','Размещайте связанные задачи в проекте, если они относятся к одному общему результату.','Проект координирует связанные задачи, а статус каждой задачи контролирует отдельное действие.']],
+  ['Call Center и звонки',['Используйте Call Center для работы с телефонными коммуникациями и связанными сведениями о звонках.','Различайте входящие звонки, инициированные клиентом, и исходящие звонки, инициированные сотрудником.','История звонков — для просмотра предыдущих телефонных взаимодействий и их контекста.','Сведения о конкретном звонке — для понимания деталей телефонного взаимодействия.','Сопоставляйте звонок с клиентом, чтобы дальнейшая работа использовала правильный контекст.','Сначала ознакомьтесь с историей звонков, затем уточните у клиента то, чего история не проясняет.','После звонка зафиксируйте результат и отдельной задачей определите следующий контакт.','Задачи — для будущих действий, история звонков — для уже состоявшихся телефонных контактов.','Не делайте вывод о результате продажи только по факту состоявшегося звонка.']]
+ ]},
+ {id:4,title:'Модуль учёта, онлайн-магазин и Mini App',topics:'Склады и остатки, долги, зарплаты, приход, продажа, возврат, производство, сырьё, публикация товаров, сайт, Mini App и заказы',groups:[
+  ['Склад и учётные операции',['Используйте склад для организации учёта товаров и проверки остатков.','Проверьте учёт и складские остатки, прежде чем обещать покупателю наличие товара.','Фиксируйте поступление новой партии как приход товара.','Отражайте продажу как операцию, которая должна согласовываться с движением товара и данными учёта.','Оформляйте возврат как отдельную операцию, связанную с возвращением товара после продажи.','Учитывайте возврат в общем движении товара, чтобы сведения об остатках оставались актуальными.','Учитывайте долги отдельно от самого факта движения товара, чтобы видеть финансовые обязательства.','Используйте начисления зарплат для отражения соответствующих расчётных операций, не смешивая их с движением товара.','Используйте модуль учёта для связи товарных операций и финансовых данных, которые нужны бизнесу.']],
+  ['Производство',['При производстве учитывайте расход сырья и товаров и контролируйте итог производства.','Сопоставляйте расход сырья и товаров с результатом производства, чтобы контролировать процесс.','Обрабатывайте производство как отдельный связанный процесс учёта, а не только как продажу готового товара.']],
+  ['Интернет-магазин, сайт и Telegram Mini App',['Опубликуйте товар в интернет-магазине, если он должен быть доступен клиенту в онлайн-каталоге.','Различайте учёт товара внутри системы и публикацию товара для покупателей в онлайн-каталоге.','Сайт — канал приёма заказов, информация о которых может использоваться внутри shamCRM.','Telegram Mini App — канал, через который клиент может взаимодействовать с каталогом и оформлять заказ.','Контролируйте онлайн-заказ после его поступления и используйте данные заказа в дальнейшей работе внутри shamCRM.','Связывайте онлайн-заказы с дальнейшей работой менеджера, а не оставляйте их изолированно от клиентского процесса.','Проверьте статус заказа и доступные сведения о нём перед тем, как обещать покупателю результат обработки.','Проверяйте складские данные и сведения о заказе в соответствующих разделах, не подменяя одно другим.']]
+ ]}
+];
+var chev='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+var modulesBuilt=false;
+function renderModules(){
+  if(!modulesBuilt){
+    $('#modules').innerHTML=MODS.map(function(m){
+      var n=m.groups.reduce(function(a,g){return a+g[1].length},0);
+      return '<details class="module" id="mod-'+m.id+'"><summary><span class="mod-num">'+m.id+'</span><span class="mod-title"><b>Модуль '+m.id+'. '+esc(m.title)+'</b><small>'+esc(m.topics)+' · '+n+' правил</small></span>'+chev+'</summary><div class="mod-body">'+
+        m.groups.map(function(g){return '<div class="rule-group"><h4>'+esc(g[0])+'</h4><ul>'+g[1].map(function(r){return '<li><span>'+esc(r)+'</span></li>'}).join('')+'</ul></div>'}).join('')+
+        '<div class="row"><button type="button" class="btn primary" data-read="'+m.id+'">Модуль изучен</button></div></div></details>';
+    }).join('');
+    modulesBuilt=true;
+  }
+  MODS.forEach(function(m){
+    var el=$('#mod-'+m.id);el.classList.toggle('read',!!state.read[m.id]);
+    var b=$('[data-read="'+m.id+'"]',el);b.textContent=state.read[m.id]?'✓ Изучено':'Модуль изучен';b.className='btn '+(state.read[m.id]?'ghost':'primary');
+  });
+  var c=MODS.filter(function(m){return state.read[m.id]}).length;
+  $('#readCount').textContent='Изучено '+c+' из 4';$('#readCount').className='pill'+(c===4?' ok':'');
+  $('#readBar').style.width=(c*25)+'%';
+}
+$('#modules').addEventListener('click',function(e){
+  var b=e.target.closest('[data-read]');if(!b)return;
+  var id=b.dataset.read;state.read[id]=!state.read[id];save();renderModules();paintSteps();
+  if(state.read[id]){var el=$('#mod-'+id);el.open=false;var nx=$('#mod-'+(+id+1));if(nx){nx.open=true;nx.scrollIntoView({block:'start',behavior:'smooth'})}else toast('Все модули изучены — можно сдавать экзамен')}
+});
+var vid=$('#promoVideo');
+vid.addEventListener('error',function(){$('#videoCard').classList.add('hidden')});
+
+/* =========================================================
+   4. ЭКЗАМЕН — вопросы из «Контрольного теста 240 вопросов»
+   ========================================================= */
+var BANK=null,bankP=null;
+function loadBank(){
+  if(bankP)return bankP;
+  bankP=fetch('exam.json').then(function(r){if(!r.ok)throw new Error('load');return r.json()}).then(function(d){
+    var gi=0;d.modules.forEach(function(m){m.qs.forEach(function(q){q.a=(('ABCD'.indexOf(d.k[gi])-gi*3)%4+4)%4;gi++})});BANK=d;return d;
+  });
+  bankP.catch(function(){bankP=null});
+  return bankP;
+}
+loadBank();
+var mode='partner';
+var PASS=0.8;
+$('#modeGrid').addEventListener('click',function(e){var b=e.target.closest('[data-mode]');if(!b)return;mode=b.dataset.mode;$$('#modeGrid .mode').forEach(function(x){x.classList.toggle('on',x===b)})});
+function renderExamIntro(){
+  var ex=state.exam;
+  if(ex&&ex.finished){showResult();return}
+  $('#examIntro').classList.remove('hidden');$('#examRun').classList.add('hidden');$('#examResult').classList.add('hidden');
+  if(!$('#exName').value)$('#exName').value=(state.cert&&state.cert.name)||(A&&A.contact)||'';
+  if(!$('#exCompany').value)$('#exCompany').value=(A&&(A.brand||A.legal_name))||'';
+  $('#resumeNote').hidden=!(ex&&!ex.finished&&ex.items&&ex.items.length);
+}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+$('#startExam').addEventListener('click',function(){
+  var name=$('#exName').value.trim();
+  $('#f-exName').classList.toggle('err',!name);
+  if(!name){$('#exName').focus();return}
+  $('#examLoad').textContent='Загружаю вопросы…';
+  loadBank().then(function(d){
+    $('#examLoad').textContent='';
+    var items=[];
+    d.modules.forEach(function(m,mi){
+      var idx=m.qs.map(function(_,i){return i});
+      if(mode==='partner')idx=shuffle(idx).slice(0,10).sort(function(a,b){return a-b});
+      idx.forEach(function(i){items.push([mi,i])});
+    });
+    state.exam={mode:mode,name:name,company:$('#exCompany').value.trim(),items:items,ans:[],pos:0,startedAt:new Date().toISOString(),finished:false};
+    save();runExam();
+  }).catch(function(){$('#examLoad').textContent='Не удалось загрузить вопросы. Обновите страницу и попробуйте ещё раз.'});
+});
+$('#resumeExam').addEventListener('click',function(){loadBank().then(runExam)});
+function runExam(){
+  $('#examIntro').classList.add('hidden');$('#examResult').classList.add('hidden');$('#examRun').classList.remove('hidden');
+  drawQ();
+}
+function drawQ(){
+  var ex=state.exam,d=BANK;var it=ex.items[ex.pos];var m=d.modules[it[0]];var q=m.qs[it[1]];
+  $('#qModule').textContent='Модуль '+m.id+' · '+m.title;
+  $('#qCounter').textContent='Вопрос '+(ex.pos+1)+' из '+ex.items.length;
+  $('#qBar').style.width=((ex.pos)/ex.items.length*100)+'%';
+  $('#qText').textContent=q.q;
+  var L='АБВГ';var cur=ex.ans[ex.pos];
+  $('#qOpts').innerHTML=q.o.map(function(o,i){return '<button type="button" class="opt'+(cur===i?' on':'')+'" data-o="'+i+'" aria-pressed="'+(cur===i)+'"><i>'+L[i]+'</i><span>'+esc(o)+'</span></button>'}).join('');
+  $('#qPrev').style.visibility=ex.pos===0?'hidden':'visible';
+  $('#qNext').disabled=cur==null;
+  $('#qNext').textContent=ex.pos===ex.items.length-1?'Завершить экзамен':'Ответить';
+}
+$('#qOpts').addEventListener('click',function(e){var b=e.target.closest('[data-o]');if(!b)return;state.exam.ans[state.exam.pos]=+b.dataset.o;save();$$('#qOpts .opt').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b)});$('#qNext').disabled=false});
+$('#qPrev').addEventListener('click',function(){if(state.exam.pos>0){state.exam.pos--;save();drawQ()}});
+$('#qNext').addEventListener('click',function(){
+  var ex=state.exam;if(ex.ans[ex.pos]==null)return;
+  if(ex.pos<ex.items.length-1){ex.pos++;save();drawQ();$('#examRun').scrollIntoView({block:'start'});return}
+  finishExam();
+});
+document.addEventListener('keydown',function(e){
+  if(currentView!=='ekzamen'||$('#examRun').classList.contains('hidden'))return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  var k={'1':0,'2':1,'3':2,'4':3}[e.key];if(k!=null){var b=$('#qOpts [data-o="'+k+'"]');if(b)b.click()}
+  if(e.key==='Enter'&&!$('#qNext').disabled)$('#qNext').click();
+});
+function score(){
+  var ex=state.exam,d=BANK;var per=d.modules.map(function(m){return {id:m.id,title:m.title,ok:0,n:0}});var wrong=[];
+  ex.items.forEach(function(it,i){var q=d.modules[it[0]].qs[it[1]];var p=per[it[0]];p.n++;if(ex.ans[i]===q.a)p.ok++;else wrong.push({m:d.modules[it[0]].id,q:q,yours:ex.ans[i]})});
+  var ok=per.reduce(function(a,p){return a+p.ok},0);
+  var passed=per.every(function(p){return p.n===0||p.ok/p.n>=PASS-1e-9});
+  return {per:per,ok:ok,n:ex.items.length,passed:passed,wrong:wrong};
+}
+function finishExam(){
+  var ex=state.exam;ex.finished=true;ex.finishedAt=new Date().toISOString();
+  var s=score();ex.result={ok:s.ok,n:s.n,passed:s.passed,per:s.per.map(function(p){return [p.ok,p.n]})};
+  if(s.passed){state.cert={name:ex.name,company:ex.company,date:ex.finishedAt,ok:s.ok,n:s.n,mode:ex.mode}}
+  save();paintSteps();
+  sendExamToCrm(ex,s);
+  showResult();
+}
+/* Результат экзамена → тот же лид в CRM */
+function sendExamToCrm(ex,s){
+  if(!CRM_URL)return;
+  var a=A||{};
+  ex.crm='sending';save();paintExamCrm();
+  crmSend({
+    type:'exam',
+    lead_id:a._leadId||null,
+    finished_at:ex.finishedAt,
+    name:ex.name,
+    company:ex.company||'',
+    phone:a.phone||'',
+    email:a.email||'',
+    mode:ex.mode==='full'?'full_240':'partner_40',
+    correct:s.ok,
+    total:s.n,
+    percent:Math.round(s.ok/s.n*100),
+    passed:s.passed,
+    modules:s.per.map(function(p){return {module:p.id,title:p.title,correct:p.ok,total:p.n}})
+  }).then(function(){if(state.exam===ex){ex.crm='ok';save();paintExamCrm()}},function(){if(state.exam===ex){ex.crm='fail';save();paintExamCrm()}});
+}
+function paintExamCrm(){
+  var el=$('#resCrm'),ex=state.exam;
+  if(!CRM_URL||!ex||!ex.crm){el.hidden=true;return}
+  el.hidden=false;
+  el.textContent=ex.crm==='ok'?'Результат передан менеджеру shamCRM.':ex.crm==='fail'?'Результат не удалось передать автоматически — сообщите его менеджеру shamCRM.':'Передаём результат менеджеру shamCRM…';
+}
+function showResult(){
+  loadBank().then(function(){
+    var ex=state.exam;var s=score();
+    $('#examIntro').classList.add('hidden');$('#examRun').classList.add('hidden');$('#examResult').classList.remove('hidden');
+    var pct=Math.round(s.ok/s.n*100);
+    $('#resEyebrow').textContent=(ex.mode==='full'?'Полный контрольный тест':'Экзамен партнёра')+' · '+ex.name;
+    $('#resPill').textContent=s.passed?'Экзамен сдан':'Не сдан';$('#resPill').className='pill '+(s.passed?'ok':'bad');
+    $('#resScore').textContent=s.ok+' / '+s.n;
+    $('#resText').textContent=s.passed?('Правильных ответов '+pct+'%. Проходной балл набран по всем модулям — сертификат готов.'):('Правильных ответов '+pct+'%. Нужно не меньше 80% по каждому модулю. Повторите модули, где результат ниже, и пересдайте: вопросы будут другими.');
+    $('#resModules').innerHTML=s.per.map(function(p){var r=p.n?p.ok/p.n:0;var good=r>=PASS-1e-9;return '<div class="mod-res"><div class="row"><b>Модуль '+p.id+'</b><span class="tabnum '+(good?'':'muted')+'">'+p.ok+' / '+p.n+(good?' ✓':'')+'</span></div><div class="bar '+(good?'mint':'red')+'"><span style="width:'+Math.round(r*100)+'%"></span></div><small class="muted">'+esc(p.title)+'</small></div>'}).join('');
+    $('#resActions').innerHTML=(s.passed?'<a class="btn primary" href="#sertifikat">Получить сертификат</a>':'<a class="btn primary" href="#obuchenie">Повторить обучение</a>')+'<button type="button" class="btn line" id="retake">'+(s.passed?'Пройти ещё раз':'Пересдать экзамен')+'</button>';
+    var L='АБВГ';
+    $('#reviewWrap').classList.toggle('hidden',!s.wrong.length);
+    $('#review').innerHTML=s.wrong.map(function(w){return '<div class="item"><small class="muted">Модуль '+w.m+'</small><b>'+esc(w.q.q)+'</b><span class="yours">Ваш ответ: '+L[w.yours]+') '+esc(w.q.o[w.yours])+'</span><span class="right">Правильно: '+L[w.q.a]+') '+esc(w.q.o[w.q.a])+'</span></div>'}).join('');
+    $('#retake').addEventListener('click',function(){state.exam=null;save();renderExamIntro()});
+    if(ex.crm==='sending'&&ex.finishedAt&&Date.now()-new Date(ex.finishedAt).getTime()>30000)ex.crm='fail';
+    paintExamCrm();
+  });
+}
+
+/* =========================================================
+   5. СЕРТИФИКАТ — шаблон Ироды, имя и дата подставляются автоматически
+   ========================================================= */
+var tpl=null,tplP=null;
+function loadTpl(){if(tplP)return tplP;tplP=new Promise(function(res,rej){var im=new Image();im.onload=function(){tpl=im;res(im)};im.onerror=rej;im.src='cert-template.jpg'});return tplP}
+function fontsReady(text){
+  var p=Promise.all([document.fonts.load('800 76px Manrope',(text||'')+'ABCАБВ'),document.fonts.load('500 34px Manrope','0123456789 /')]).catch(function(){});
+  return Promise.race([p,new Promise(function(r){setTimeout(r,2500)})]);
+}
+function fmtDate(iso){var d=new Date(iso);if(isNaN(d))return iso;var p=function(n){return (n<10?'0':'')+n};return p(d.getDate())+' / '+p(d.getMonth()+1)+' / '+d.getFullYear()}
+function measure(ctx,text,size,sp){ctx.font='800 '+size+'px Manrope, sans-serif';var w=0;for(var i=0;i<text.length;i++){w+=ctx.measureText(text[i]).width+(i<text.length-1?size*sp:0)}return w}
+function drawSpaced(ctx,text,x,y,size,sp){var w=measure(ctx,text,size,sp);var g=ctx.createLinearGradient(x,0,x+Math.max(w,300),0);g.addColorStop(0,'#06FEE9');g.addColorStop(1,'#74DA61');ctx.fillStyle=g;ctx.font='800 '+size+'px Manrope, sans-serif';var cx=x;for(var i=0;i<text.length;i++){ctx.fillText(text[i],cx,y);cx+=ctx.measureText(text[i]).width+size*sp}}
+function makeCert(name,iso){
+  return Promise.all([loadTpl(),fontsReady(String(name||'').toUpperCase())]).then(function(){
+    var c=document.createElement('canvas');c.width=tpl.naturalWidth||2000;c.height=tpl.naturalHeight||1414;
+    var k=c.width/2000;var ctx=c.getContext('2d');ctx.drawImage(tpl,0,0,c.width,c.height);
+    ctx.textBaseline='alphabetic';
+    var text=String(name||'').trim().replace(/\s+/g,' ').toUpperCase();
+    var maxW=965*k,x=145*k,base=570*k,sp=0.1;
+    var size=76*k;
+    if(measure(ctx,text,size,sp)<=maxW){drawSpaced(ctx,text,x,base,size,sp)}
+    else{
+      var words=text.split(' ');var l1=words[0],l2=words.slice(1).join(' ');
+      var s2=68*k;
+      while(s2>34*k&&(measure(ctx,l1,s2,sp)>maxW||measure(ctx,l2,s2,sp)>maxW))s2-=2*k;
+      if(l2&&s2>=44*k){drawSpaced(ctx,l1,x,base-6*k,s2,sp);drawSpaced(ctx,l2,x,base-6*k+s2*1.18,s2,sp)}
+      else{var s1=76*k;while(s1>24*k&&measure(ctx,text,s1,0.04)>maxW)s1-=2*k;drawSpaced(ctx,text,x,base,s1,0.04)}
+    }
+    ctx.fillStyle='#FFFFFF';ctx.font='500 '+(34*k)+'px Manrope, sans-serif';ctx.fillText(fmtDate(iso),257*k,771*k);
+    return c;
+  });
+}
+function canvasPdf(c){
+  if(!window.jspdf||!window.jspdf.jsPDF)return null;
+  var pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'px',format:[c.width,c.height],hotfixes:['px_scaling']});
+  pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,c.width,c.height);
+  return pdf.output('blob');
+}
+function slug(n){return String(n||'partner').trim().replace(/[^\wА-Яа-яЁёЎўҚқҒғҲҳ]+/g,'-').replace(/^-|-$/g,'')||'partner'}
+function saveCanvas(c,name,kind){
+  var fname='Sertifikat-shamCRM-'+slug(name)+'.'+kind;
+  var p=kind==='pdf'?Promise.resolve(canvasPdf(c)):new Promise(function(r){c.toBlob(r,'image/png')});
+  p.then(function(b){if(!b)throw new Error('empty');return dl.save({filename:fname,data:b})}).then(function(){toast('Сертификат сохранён')}).catch(function(){toast('Не получилось скачать. Сохраните изображение через правую кнопку мыши.')});
+}
+var certCanvas=null;
+function refreshCertButtons(){
+  var pdf=!!(window.jspdf&&window.jspdf.jsPDF);
+  $('#dlPdf').classList.toggle('hidden',!pdf);$('#mPdf').classList.toggle('hidden',!pdf);
+}
+function renderCert(){
+  var c=state.cert;
+  $('#certLocked').classList.toggle('hidden',!!c);$('#certReady').classList.toggle('hidden',!c);
+  refreshCertButtons();
+  if(!c)return;
+  makeCert(c.name,c.date).then(function(cv){
+    certCanvas=cv;$('#certImg').src=cv.toDataURL('image/jpeg',0.92);
+    var msg='Экзамен shamCRM сдан\nФИО: '+c.name+(c.company?'\nКомпания: '+c.company:'')+'\nРезультат: '+c.ok+' из '+c.n+'\nДата: '+fmtDate(c.date).replace(/ /g,'');
+    $('#certTg').href='https://t.me/share/url?url='+encodeURIComponent('https://shamcrm.com')+'&text='+encodeURIComponent(msg);
+  }).catch(function(){toast('Не удалось построить сертификат. Обновите страницу.')});
+}
+$('#dlPng').addEventListener('click',function(){if(certCanvas)saveCanvas(certCanvas,state.cert.name,'png')});
+$('#dlPdf').addEventListener('click',function(){if(certCanvas)saveCanvas(certCanvas,state.cert.name,'pdf')});
+
+/* =========================================================
+   ДЛЯ ОТДЕЛА — выдать сертификат вручную (страница #otdel, в меню ссылки нет)
+   ========================================================= */
+var manualCanvas=null;
+$('#mDate').value=(function(){var d=new Date(),p=function(n){return (n<10?'0':'')+n};return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()})();
+$('#mMake').addEventListener('click',function(){
+  var n=$('#mName').value.trim();if(!n){$('#mName').focus();return}
+  var m=$('#mDate').value.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);var iso=m?new Date(+m[3],+m[2]-1,+m[1]).toISOString():new Date().toISOString();
+  makeCert(n,iso).then(function(c){manualCanvas=c;$('#mImg').src=c.toDataURL('image/jpeg',0.92);$('#mOut').classList.remove('hidden');refreshCertButtons()});
+});
+$('#mPng').addEventListener('click',function(){if(manualCanvas)saveCanvas(manualCanvas,$('#mName').value,'png')});
+$('#mPdf').addEventListener('click',function(){if(manualCanvas)saveCanvas(manualCanvas,$('#mName').value,'pdf')});
+
+/* ---------- старт ---------- */
+paintSteps();route();
+})();
+</script>
+</body>
+</html>
