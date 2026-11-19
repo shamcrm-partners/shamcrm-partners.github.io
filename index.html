@@ -297,24 +297,18 @@ tr.total td{background:#F8F9FD}
 .cert-sample figcaption{font-size:13px;color:var(--muted)}
 .dog-data{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:4px 14px;margin-top:8px;color:var(--ink)}
 .dog-data .muted{color:var(--muted)}
+.doc-card>*{min-width:0}
+.dog-data>span{min-width:0;overflow-wrap:anywhere}
+@media (max-width:600px){.dog-data{grid-template-columns:1fr;gap:0}.dog-data>span:nth-child(odd){color:var(--muted);font-size:13px;margin-top:8px}}
 .contract-bar{align-items:center}
 .view>*{min-width:0}
 .contract-view{margin-top:16px;background:#E9ECF5;border-radius:12px;overflow:auto;max-height:80vh;max-width:100%}
 .contract-view .docx-wrapper{background:#E9ECF5!important;padding:20px!important}
+#contractStage .docx,.contract-view .docx{hyphens:manual!important;-webkit-hyphens:manual!important}
 .contract-view .docx-wrapper>section.docx{box-shadow:0 10px 30px -18px rgba(18,22,58,.45)!important;margin-bottom:20px!important}
-@media print{
-  @page{size:A4;margin:0}
-  body.print-contract{background:#fff}
-  body.print-contract>*:not(main){display:none!important}
-  body.print-contract main{padding:0;max-width:none}
-  body.print-contract main>section:not(#v-dogovor){display:none!important}
-  body.print-contract #v-dogovor>*:not(#contractCard){display:none!important}
-  body.print-contract #contractCard>*:not(#contractView){display:none!important}
-  body.print-contract #contractCard{border:0;padding:0;background:none}
-  body.print-contract .contract-view{max-height:none;overflow:visible;background:none;margin:0;border-radius:0}
-  body.print-contract .contract-view .docx-wrapper{zoom:1!important;background:none!important;padding:0!important}
-  body.print-contract .contract-view .docx-wrapper>section.docx{box-shadow:none!important;margin:0!important}
-}
+#contractStage{position:absolute;left:-20000px;top:0;width:1000px;pointer-events:none}
+/* html2canvas меряет базовую линию шрифта через body>div>img; с img{display:block} текст в PDF уезжает вниз */
+body>div>img{display:inline!important}
 </style>
 </head>
 <body>
@@ -478,7 +472,7 @@ tr.total td{background:#F8F9FD}
       <div class="doc-ico">PDF</div>
       <div>
         <h3><span class="uz">«ShamCRM» onlayn-servisini tarqatish va joriy etish bo‘yicha shartnoma</span><span class="ru">Договор по распространению и внедрению онлайн-сервиса «ShamCRM»</span></h3>
-        <p class="muted" style="margin-top:6px"><span class="uz">Tomonlar: «SOFTTECH GROUP» MChJ (shamCRM) va hamkor. Shartnomaga anketangizdagi ma’lumotlar avtomatik yoziladi: uni shu yerda onlayn ko‘ring, PDF yoki Word sifatida saqlang va imzolash uchun hamkorlar bo‘limi menejeriga yuboring.</span><span class="ru">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Договор заполняется данными из вашей анкеты: откройте его здесь онлайн, сохраните в PDF или Word и отправьте менеджеру отдела партнёров для подписания.</span></p>
+        <p class="muted" style="margin-top:6px"><span class="uz">Tomonlar: «SOFTTECH GROUP» MChJ (shamCRM) va hamkor. Shartnomaga anketangizdagi ma’lumotlar avtomatik yoziladi: uni shu yerda tekshiring, PDF formatida yuklab oling va imzolash uchun hamkorlar bo‘limi menejeriga yuboring.</span><span class="ru">Стороны: ООО «SOFTTECH GROUP» (shamCRM) и партнёр. Договор заполняется данными из вашей анкеты: проверьте его здесь, скачайте в PDF и отправьте менеджеру отдела партнёров для подписания.</span></p>
         <div class="row" style="margin-top:16px" id="dogButtons"></div>
         <div class="muted" id="dogHint" style="margin-top:12px;font-size:14px"></div>
       </div>
@@ -488,11 +482,10 @@ tr.total td{background:#F8F9FD}
     <div class="row between contract-bar">
       <h3><span class="uz">Shartnoma sizning ma’lumotlaringiz bilan</span><span class="ru">Договор с вашими данными</span></h3>
       <div class="row">
-        <button type="button" class="btn primary" id="pdfContract"><span class="uz">PDF saqlash</span><span class="ru">Сохранить PDF</span></button>
-        <button type="button" class="btn ghost" id="wordContract"><span class="uz">Word yuklab olish</span><span class="ru">Скачать Word</span></button>
+        <button type="button" class="btn primary pdf-dl"><span class="uz">Shartnomani yuklab olish (PDF)</span><span class="ru">Скачать договор (PDF)</span></button>
       </div>
     </div>
-    <p class="muted" style="margin-top:8px;font-size:14px"><span class="uz">PDF: chop etish oynasida «PDF sifatida saqlash»ni tanlang. Shartnoma matni rus tilida.</span><span class="ru">PDF: в окне печати выберите «Сохранить как PDF». Текст договора — на русском языке.</span></p>
+    <p class="muted" style="margin-top:8px;font-size:14px"><span class="uz">Shartnoma matni rus tilida.</span><span class="ru">Текст договора — на русском языке.</span></p>
     <div id="contractView" class="contract-view"></div>
   </div>
   <div class="card">
@@ -592,6 +585,7 @@ tr.total td{background:#F8F9FD}
 </main>
 <footer><div class="wrap row between"><span>shamCRM · «SOFTTECH GROUP» MChJ · Toshkent · Ташкент</span><span>+998 55 588 81 00 · info@shamcrm.com · shamcrm.com</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="contractStage" aria-hidden="true"></div>
 
 <script src="config.js"></script>
 <script>
@@ -858,31 +852,86 @@ function buildContract(){
 }
 function fitContract(){var box=$('#contractView'),w=box.querySelector('.docx-wrapper'),sec=box.querySelector('section.docx');if(!w||!sec)return;w.style.zoom='';var z=Math.min(1,(box.clientWidth-2)/(sec.offsetWidth+8));w.style.zoom=z<1?String(z):''}
 window.addEventListener('resize',function(){if(currentView==='dogovor')fitContract()});
+/* docx-preview даёт одну длинную страницу — режем её на листы A4 по границам строк, чтобы просмотр и PDF совпадали */
+function paginateContract(stage){
+  var wrap=stage.querySelector('.docx-wrapper'),sec=wrap&&wrap.querySelector('section.docx');if(!sec)throw new Error('render');
+  var cs=getComputedStyle(sec),pt=parseFloat(cs.paddingTop)||0,pb=parseFloat(cs.paddingBottom)||0,W=sec.offsetWidth;
+  var mh=String(cs.minHeight||''),pageH=/px$/.test(mh)&&parseFloat(mh)>W?parseFloat(mh):W*297/210,contentH=pageH-pt-pb,top0=sec.getBoundingClientRect().top;
+  var art=sec.querySelector('article')||sec,iv=[],rg=document.createRange(),tw=document.createTreeWalker(art,NodeFilter.SHOW_TEXT),n;
+  while((n=tw.nextNode())){if(!n.nodeValue.trim())continue;rg.selectNodeContents(n);Array.prototype.forEach.call(rg.getClientRects(),function(r){if(r.height>0)iv.push([r.top-top0,r.bottom-top0])})}
+  Array.prototype.forEach.call(art.querySelectorAll('img,svg'),function(el){var r=el.getBoundingClientRect();if(r.height>0)iv.push([r.top-top0,r.bottom-top0])});
+  if(!iv.length)throw new Error('empty');
+  iv.sort(function(a,b){return a[0]-b[0]});
+  var m=[];iv.forEach(function(x){var l=m[m.length-1];if(l&&x[0]<l[1]-0.5){if(x[1]>l[1])l[1]=x[1]}else m.push([x[0],x[1]])});
+  var end=Math.max(m[m.length-1][1],art.getBoundingClientRect().bottom-top0),pages=[],s0=pt;
+  while(pages.length<80){
+    var lim=s0+contentH;if(end<=lim){pages.push([s0,end]);break}
+    var c=-1,cg=0,alt=-1;for(var k=0;k<m.length&&m[k][0]<lim;k++){var gap=m[k+1]?m[k+1][0]-m[k][1]:99,y=m[k][1]+Math.min(gap/2+2,4);if(y<=lim&&y>s0){c=y;cg=gap;if(gap>=3)alt=y}}
+    if(c>0&&cg<3&&alt>0&&c-alt<60)c=alt;/* по возможности режем между абзацами, а не внутри абзаца */
+    if(c<0||c-s0<contentH*0.25)c=lim;
+    pages.push([s0,c]);s0=c;
+  }
+  var frag=document.createDocumentFragment(),cr=getComputedStyle(wrap).counterReset;
+  pages.forEach(function(p){
+    var pg=document.createElement('section');pg.className=sec.className+' pdf-page';
+    pg.style.cssText='width:'+W+'px;height:'+pageH+'px;min-height:'+pageH+'px;padding:0;position:relative;overflow:hidden;display:block';
+    var clip=document.createElement('div');clip.style.cssText='position:absolute;left:0;top:'+pt+'px;width:'+W+'px;height:'+(p[1]-p[0])+'px;overflow:hidden';
+    var c=sec.cloneNode(true);c.style.position='absolute';c.style.left='0';c.style.top=(-p[0])+'px';c.style.margin='0';c.style.boxShadow='none';if(cr&&cr!=='none')c.style.counterReset=cr;/* у каждого листа своя нумерация пунктов, иначе счётчики продолжаются с предыдущего листа */
+    clip.appendChild(c);pg.appendChild(clip);frag.appendChild(pg);
+  });
+  wrap.innerHTML='';wrap.appendChild(frag);
+  return wrap;
+}
+var contractReady=null,contractSeq=0,pdfBlob=null,pdfKey='',pdfBusy=false;
 function showContract(){
-  var card=$('#contractCard'),box=$('#contractView');card.classList.remove('hidden');
+  var card=$('#contractCard'),box=$('#contractView'),stage=$('#contractStage');card.classList.remove('hidden');
   box.innerHTML='<p class="muted" style="padding:24px">'+esc(U('Shartnoma tayyorlanmoqda…','Готовлю договор…'))+'</p>';
-  Promise.all([buildContract(),loadLib('vendor/jszip.min.js','JSZip').then(function(){return loadLib('vendor/docx-preview.min.js','docx')})])
-    .then(function(r){box.innerHTML='';return window.docx.renderAsync(r[0],box,null,{className:'docx',inWrapper:true,ignoreLastRenderedPageBreak:true,breakPages:true,useBase64URL:true})})
-    .then(function(){fitContract();setTimeout(fitContract,300)})
-    .catch(function(){box.innerHTML='<p class="muted" style="padding:24px">'+esc(U('Shartnomani ochib bo‘lmadi. Sahifani yangilang yoki shartnomani Word sifatida yuklab oling.','Не удалось открыть договор. Обновите страницу или скачайте договор в Word.'))+'</p>'});
+  var seq=++contractSeq,holder=document.createElement('div'),key;stage.appendChild(holder);
+  function current(){if(seq!==contractSeq){if(holder.parentNode)holder.parentNode.removeChild(holder);throw new Error('stale')}}
+  contractReady=Promise.all([buildContract(),loadLib('vendor/jszip.min.js','JSZip').then(function(){return loadLib('vendor/docx-preview.min.js','docx')})])
+    .then(function(r){current();key=contractKey;return window.docx.renderAsync(r[0],holder,null,{className:'docx',inWrapper:true,ignoreLastRenderedPageBreak:true,breakPages:true,useBase64URL:true})})
+    .then(function(){return document.fonts&&document.fonts.ready?document.fonts.ready:null})
+    .then(function(){current();var wrap=paginateContract(holder);$$('#contractStage>div').forEach(function(d){if(d!==holder)stage.removeChild(d)});box.innerHTML='';box.appendChild(wrap.cloneNode(true));fitContract();setTimeout(fitContract,300);return key});
+  contractReady.catch(function(e){if(e&&e.message==='stale')return;if(holder.parentNode)holder.parentNode.removeChild(holder);box.innerHTML='<p class="muted" style="padding:24px">'+esc(U('Shartnomani ochib bo‘lmadi. Sahifani yangilang.','Не удалось открыть договор. Обновите страницу.'))+'</p>'});
+}
+function contractFileName(){return 'Dogovor-shamCRM-'+(String(A.brand||A.legal_name||'partner').replace(/[^\wА-Яа-яЁёЎўҚқҒғҲҳ]+/g,'-').replace(/^-|-$/g,'')||'partner')+'.pdf'}
+function makeContractPdf(){
+  var ready=contractReady;return (ready||Promise.reject(new Error('nocontract'))).then(function(key){if(ready!==contractReady)return makeContractPdf();
+    if(pdfBlob&&pdfKey===key)return pdfBlob;
+    var pages=Array.prototype.slice.call(document.querySelectorAll('#contractStage section.pdf-page'));if(!pages.length)throw new Error('nopages');
+    return Promise.all([loadLib('vendor/html2canvas.min.js','html2canvas'),loadLib('vendor/jspdf.umd.min.js','jspdf')]).then(function(r){
+      var h2c=r[0],pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait',compress:true}),chain=Promise.resolve();
+      pages.forEach(function(pg,i){chain=chain.then(function(){
+        toast(U('PDF tayyorlanmoqda… ','Готовлю PDF… ')+(i+1)+' / '+pages.length);
+        return h2c(pg,{scale:2,backgroundColor:'#ffffff',logging:false,ignoreElements:function(el){return el.tagName==='MAIN'||el.tagName==='HEADER'||el.tagName==='FOOTER'||el.id==='toast'}})
+          .then(function(cv){if(i)pdf.addPage('a4','portrait');pdf.addImage(cv.toDataURL('image/jpeg',0.82),'JPEG',0,0,210,297,undefined,'FAST')});
+      })});
+      return chain.then(function(){pdfBlob=pdf.output('blob');pdfKey=key;return pdfBlob});
+    });
+  });
+}
+function downloadContractPdf(){
+  if(pdfBusy)return;pdfBusy=true;$$('.pdf-dl').forEach(function(b){b.disabled=true});
+  makeContractPdf().then(function(b){saveBlob(b,contractFileName());toast(U('Shartnoma PDF formatida yuklab olindi','Договор скачан в PDF'))})
+    .catch(function(){toast(U('PDF tayyorlab bo‘lmadi. Sahifani yangilang va qayta urinib ko‘ring.','Не получилось подготовить PDF. Обновите страницу и попробуйте ещё раз.'))})
+    .then(function(){pdfBusy=false;$$('.pdf-dl').forEach(function(b){b.disabled=false})});
 }
 function renderDogovor(){
   var L2=state.lang==='ru'?1:0;
   if(hasAnketa()){
     var v=contractValues();
     var rowsD=[[['Tashkilot','Организация'],v.legal_name],[['Rahbar','Руководитель'],v.ceo],[['STIR (INN)','ИНН'],v.inn],[['Yuridik manzil','Юридический адрес'],v.legal_addr],[['Shahar','Город'],v.city],[['Bank','Банк'],v.bank],[['Hisob raqami','Расчётный счёт'],v.account],[['MFO','МФО'],v.mfo],[['Telefon','Телефон'],v.phone],[['Pochta','Почта'],v.email]];
-    $('#dogButtons').innerHTML='<a class="btn line" href="#anketa" id="dogEdit">'+esc(U('Ma’lumotlarni o‘zgartirish','Изменить данные'))+'</a><a class="btn ghost" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">'+esc(U('Bo‘sh shartnoma (PDF)','Пустой бланк (PDF)'))+'</a>';
+    $('#dogButtons').innerHTML='<button type="button" class="btn primary pdf-dl">'+esc(U('Shartnomani yuklab olish (PDF)','Скачать договор (PDF)'))+'</button><a class="btn line" href="#anketa" id="dogEdit">'+esc(U('Ma’lumotlarni o‘zgartirish','Изменить данные'))+'</a>';
     $('#dogHint').innerHTML='<b>'+esc(U('Shartnomaga yozilgan:','В договор вписано:'))+'</b><span class="dog-data">'+rowsD.map(function(r){var val=String(r[1]||'').trim();return '<span>'+esc(r[0][L2])+'</span><span'+(val?'':' class="muted"')+'>'+(val?esc(val):esc(U('ko‘rsatilmagan — bo‘sh qator qoladi','не указано — останется пустая строка')))+'</span>'}).join('')+'</span>';
     showContract();
   }else{
-    $('#contractCard').classList.add('hidden');
-    $('#dogButtons').innerHTML='<a class="btn primary" href="#anketa">'+esc(U('Avval anketani to‘ldiring','Сначала заполнить анкету'))+'</a><a class="btn ghost" href="files/Dogovor-shamCRM.pdf" target="_blank" rel="noopener">'+esc(U('Shartnomani o‘qish (PDF)','Прочитать договор (PDF)'))+'</a>';
-    $('#dogHint').textContent=U('Anketadan keyin shartnoma shu yerda sizning tashkilotingiz nomi va rekvizitlari bilan ochiladi.','После анкеты договор откроется здесь уже с названием вашей организации и реквизитами.');
+    $('#contractCard').classList.add('hidden');contractReady=null;
+    $('#dogButtons').innerHTML='<a class="btn primary" href="#anketa">'+esc(U('Avval anketani to‘ldiring','Сначала заполнить анкету'))+'</a>';
+    $('#dogHint').textContent=U('Anketadan keyin shartnoma shu yerda sizning tashkilotingiz nomi va rekvizitlari bilan ochiladi va uni PDF formatida yuklab olish mumkin.','После анкеты договор откроется здесь уже с названием вашей организации и реквизитами, и его можно будет скачать в PDF.');
   }
 }
 $('#dogButtons').addEventListener('click',function(e){if(e.target.closest('#dogEdit')){$('#formDone').dataset.edit='1';part=0}});
-$('#wordContract').addEventListener('click',function(){buildContract().then(function(b){saveBlob(b,'Dogovor-shamCRM-'+String(A.brand||A.legal_name||'partner').replace(/[^\wА-Яа-яЁёЎўҚқҒғҲҳ]+/g,'-').replace(/^-|-$/g,'')+'.docx');toast(U('Shartnoma yuklab olindi','Договор скачан'))}).catch(function(){toast(U('Shartnomani tayyorlab bo‘lmadi. Sahifani yangilang.','Не получилось подготовить договор. Обновите страницу.'))})});
-$('#pdfContract').addEventListener('click',function(){var w=$('#contractView .docx-wrapper');if(!w){toast(U('Shartnoma hali yuklanmoqda','Договор ещё загружается'));return}document.body.classList.add('print-contract');try{window.print()}finally{setTimeout(function(){document.body.classList.remove('print-contract')},500)}});
+$('#v-dogovor').addEventListener('click',function(e){if(e.target.closest('.pdf-dl'))downloadContractPdf()});
 
 setLang(state.lang);route();
 })();
